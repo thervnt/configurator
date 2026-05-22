@@ -1622,7 +1622,7 @@ function renderProductSide() {
   }
 }
 
-function renderTile(value, label, secondary, isSelected, state, attrName, attrValue) {
+function renderTile(value, label, secondary, isSelected, state, attrName, attrValue, tooltip) {
   let classes = ['vtile'];
   let attrs = '';
   if (isSelected) classes.push('selected');
@@ -1630,10 +1630,66 @@ function renderTile(value, label, secondary, isSelected, state, attrName, attrVa
   else if (state === 'disabled') { classes.push('disabled'); attrs = 'disabled aria-disabled="true"'; }
   else if (state === 'hidden') return '';
 
-  return '<button class="' + classes.join(' ') + '" data-' + attrName + '="' + attrValue + '" ' + attrs + '>' +
+  const titleAttr = tooltip ? ' title="' + tooltip.replace(/"/g, '&quot;') + '"' : '';
+  return '<button' + titleAttr + ' class="' + classes.join(' ') + '" data-' + attrName + '="' + attrValue + '" ' + attrs + '>' +
     '<span class="vtile-value">' + label + '</span>' +
     (secondary ? secondary : '') +
     '</button>';
+}
+
+// Human-readable description of an attribute value, used in tooltips.
+function describeAttr(attr, value) {
+  if (attr === 'polzahl') return 'Polzahl ' + value;
+  if (attr === 'stil')    return 'Stil ' + value + ' mm\u00b2';
+  if (attr === 'hebel')   return value === 'green-range' ? 'Hebel-Variante Green Range' : 'Hebel-Variante Standard';
+  return '';
+}
+
+// Tooltip text for dashed (Prototype A) and disabled (Prototype B) tiles.
+// Dashed: says exactly which other attributes the auto-resolve will adjust.
+// Disabled: names the current attribute(s) blocking the option and the
+// resolving action. Empty string for selectable/selected tiles.
+function tileTooltip(p, s, h, attr, optValue, state) {
+  if (state !== 'dashed' && state !== 'disabled') return '';
+
+  const tryP = attr === 'polzahl' ? optValue : p;
+  const tryS = attr === 'stil'    ? optValue : s;
+  const tryH = attr === 'hebel'   ? optValue : h;
+
+  if (state === 'dashed') {
+    const changedKey = attr === 'polzahl' ? 'p' : (attr === 'stil' ? 's' : 'h');
+    const r = resolveCombo(tryP, tryS, tryH, changedKey);
+    const changes = [];
+    if (attr !== 'polzahl' && r.p !== p) changes.push(describeAttr('polzahl', r.p));
+    if (attr !== 'stil'    && r.s !== s) changes.push(describeAttr('stil',    r.s));
+    if (attr !== 'hebel'   && r.h !== h) changes.push(describeAttr('hebel',   r.h));
+    if (!changes.length) return 'Klick passt Ihre weitere Auswahl automatisch an.';
+    return 'Auswahl wechselt automatisch zu ' + changes.join(' und ') + '.';
+  }
+
+  // disabled (Prototype B): figure out which currently-set attribute(s)
+  // would need to change for this option to become available.
+  const polValues = [2, 3, 5, 10];
+  const stilValues = ['4', '6'];
+  const hebelValues = ['standard', 'green-range'];
+  const blockers = [];
+  if (attr !== 'polzahl') {
+    const fixable = polValues.some(v => matrix[v + '|' + tryS + '|' + tryH]);
+    if (fixable) blockers.push(describeAttr('polzahl', p));
+  }
+  if (attr !== 'stil') {
+    const fixable = stilValues.some(v => matrix[tryP + '|' + v + '|' + tryH]);
+    if (fixable) blockers.push(describeAttr('stil', s));
+  }
+  if (attr !== 'hebel') {
+    const fixable = hebelValues.some(v => matrix[tryP + '|' + tryS + '|' + v]);
+    if (fixable) blockers.push(describeAttr('hebel', h));
+  }
+  if (!blockers.length) return 'Nicht verf\u00fcgbar mit Ihrer aktuellen Auswahl.';
+  if (blockers.length === 1) {
+    return 'Nicht verf\u00fcgbar mit ' + blockers[0] + '. Bitte ' + blockers[0].split(' ')[0] + ' \u00e4ndern.';
+  }
+  return 'Nicht verf\u00fcgbar mit ' + blockers.slice(0, -1).join(', ') + ' und ' + blockers[blockers.length - 1] + '.';
 }
 
 function tileStateFor(isCompat, isSelected) {
@@ -1664,7 +1720,7 @@ function renderPrototype() {
       '<span class="vtile-divider"></span>' +
       '<span class="vtile-price">' + fmtEur(safePricing.price) + '</span>' +
       '<span class="vtile-unit">' + safePricing.unitPrice.toFixed(2).replace('.', ',') + ' € / Stück</span>';
-    return renderTile(opt.id, opt.label, secondary, isSel, tState, 'polzahl', opt.id);
+    return renderTile(opt.id, opt.label, secondary, isSel, tState, 'polzahl', opt.id, tileTooltip(p, s, h, 'polzahl', opt.id, tState));
   }).join('');
 
   // For C: stil and hebel only show options compatible with current polzahl
@@ -1680,7 +1736,7 @@ function renderPrototype() {
     const isSel = opt.id === s;
     const isCompat = APPROACH === 'C' ? true : isAvailable(p, opt.id, h);
     const tState = tileStateFor(isCompat, isSel);
-    return renderTile(opt.id, opt.label, '', isSel, tState, 'stil', opt.id);
+    return renderTile(opt.id, opt.label, '', isSel, tState, 'stil', opt.id, tileTooltip(p, s, h, 'stil', opt.id, tState));
   }).join('');
 
   const hebelTiles = visibleHebel.map(opt => {
@@ -1688,7 +1744,7 @@ function renderPrototype() {
     const isCompat = APPROACH === 'C' ? true : isAvailable(p, s, opt.id);
     const tState = tileStateFor(isCompat, isSel);
     const secondary = '<span class="vtile-unit">' + opt.sub + '</span>';
-    return renderTile(opt.id, opt.label, secondary, isSel, tState, 'hebel', opt.id);
+    return renderTile(opt.id, opt.label, secondary, isSel, tState, 'hebel', opt.id, tileTooltip(p, s, h, 'hebel', opt.id, tState));
   }).join('');
 
   let hintText = '';
