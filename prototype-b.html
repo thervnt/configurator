@@ -638,7 +638,8 @@ button { font: inherit; cursor: pointer; }
     0 1px 2px 0 rgba(17, 18, 19, 0.08);
 }
 
-.beste-wahl-pill {
+.buy-box .bestseller-pill { margin-bottom: 8px; }
+.beste-wahl-pill--unused {
   display: inline-block;
   background: #ffe9d6;
   color: #b14a07;
@@ -1187,7 +1188,6 @@ button { font: inherit; cursor: pointer; }
     <!-- INFO COL (variant selector lives here) -->
     <div class="info-col">
       <div class="info-header">
-        <span class="bestseller-pill">Bestseller</span>
         <button class="share-btn" aria-label="Teilen">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
         </button>
@@ -1245,7 +1245,7 @@ button { font: inherit; cursor: pointer; }
 
   <!-- RIGHT BUY BOX -->
   <aside class="buy-box">
-    <span class="beste-wahl-pill">Beste Wahl</span>
+    <span class="bestseller-pill" data-bestseller-pill style="display:none">Bestseller</span>
     <div class="price-main">
       <span class="amount" data-price>5,25 €</span>
       <span class="unit" data-unit>(0,35€/Stück)</span>
@@ -1682,6 +1682,11 @@ function renderProductSide() {
     document.querySelector('[data-unit]').textContent =
       '(' + pricing.unitPrice.toFixed(2).replace('.', ',') + '€/Stück)';
   }
+
+  // Bestseller pill: only highlighted for the 25-Stück Set. Other
+  // packs (Einzelstück, larger Sets) carry no badge.
+  const bestsellerPill = document.querySelector('[data-bestseller-pill]');
+  if (bestsellerPill) bestsellerPill.style.display = state.packSize === 25 ? 'inline-block' : 'none';
 
   // Pack-size pills
   const packRow = document.querySelector('[data-pack-row]');
