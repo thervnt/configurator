@@ -2296,6 +2296,9 @@ document.querySelector('[data-qty]').addEventListener('change', e => {
   e.target.value = state.qty;
   renderProductSide();
 });
+document.querySelector('[data-qty]').addEventListener('input', e => {
+  e.target.style.width = Math.max(1, String(e.target.value).length) + 'ch';
+});
 
 
 
