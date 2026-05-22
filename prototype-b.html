@@ -1780,7 +1780,11 @@ function renderProductSide() {
     const actual = packPrice * state.qty;
     const list   = pricing.baselineUnit * sz * state.qty;
     const savingsPct = list > 0 ? (1 - actual / list) * 100 : 0;
-    const showDiscount = savingsPct >= 1;
+    // Don't surface the discount story (strike-through, red badge,
+    // Bestseller pill) on first arrival - only once the user has
+    // engaged with the configurator. This keeps the initial impression
+    // a single clear catalog price.
+    const showDiscount = savingsPct >= 1 && state.interacted;
     const actualUnit = sz > 0 ? packPrice / sz : pricing.unitPrice;
 
     document.querySelector('[data-price]').textContent = actual.toFixed(2).replace('.', ',') + ' €';
@@ -1830,10 +1834,12 @@ function renderProductSide() {
     }
   }
 
-  // Bestseller pill: only highlighted for the 25-Stück Set. Other
-  // packs (Einzelstück, larger Sets) carry no badge.
+  // Bestseller pill: only highlighted for the 25-Stück Set, AND only
+  // after the user has interacted with the configurator. Keeps the
+  // initial impression clean (no "Bestseller" framing on first
+  // arrival).
   const bestsellerPill = document.querySelector('[data-bestseller-pill]');
-  if (bestsellerPill) bestsellerPill.style.display = state.packSize === 25 ? 'inline-block' : 'none';
+  if (bestsellerPill) bestsellerPill.style.display = (state.packSize === 25 && state.interacted) ? 'inline-block' : 'none';
 
   // Pack-size pills
   const packRow = document.querySelector('[data-pack-row]');
