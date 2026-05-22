@@ -157,6 +157,13 @@ button { font: inherit; cursor: pointer; }
   position: relative;
 }
 .header-action svg { width: 20px; height: 20px; stroke: var(--c-text-on-dark); }
+.icon-badge.bump { animation: badge-bump 0.55s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes badge-bump {
+  0%   { transform: scale(1);    box-shadow: 0 0 0 0 rgba(255, 255, 0, 0.85); }
+  40%  { transform: scale(1.45); box-shadow: 0 0 0 8px rgba(255, 255, 0, 0); }
+  70%  { transform: scale(0.92); box-shadow: 0 0 0 8px rgba(255, 255, 0, 0); }
+  100% { transform: scale(1);    box-shadow: 0 0 0 0 rgba(255, 255, 0, 0); }
+}
 .icon-badge {
   position: absolute;
   top: -6px;
@@ -2394,6 +2401,10 @@ document.addEventListener('click', e => {
     if (!headerBadge) return;
     const current = parseInt(headerBadge.textContent, 10) || 0;
     headerBadge.textContent = String(Math.max(0, current + delta));
+    // Restart the bump animation
+    headerBadge.classList.remove('bump');
+    void headerBadge.offsetWidth;
+    headerBadge.classList.add('bump');
   };
   wishlistBtn.addEventListener('click', () => {
     const wasActive = wishlistBtn.classList.contains('active');
