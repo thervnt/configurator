@@ -429,6 +429,52 @@ button { font: inherit; cursor: pointer; }
   color: var(--c-text-tertiary);
   margin: 8px 0 0;
 }
+
+/* Custom tooltip for dashed/disabled tiles (native title is too slow
+   and unreliable on disabled buttons across browsers). */
+.vtile[data-tooltip] { position: relative; }
+.vtile[data-tooltip]:hover::after,
+.vtile[data-tooltip]:focus-visible::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--c-navy);
+  color: var(--c-text-on-dark);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  padding: 8px 12px;
+  border-radius: 6px;
+  width: max-content;
+  max-width: 240px;
+  white-space: normal;
+  text-align: center;
+  z-index: 50;
+  pointer-events: none;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+}
+.vtile[data-tooltip]:hover::before,
+.vtile[data-tooltip]:focus-visible::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--c-navy);
+  z-index: 50;
+  pointer-events: none;
+}
+.vtile.disabled { cursor: not-allowed; }
+
+/* Soft divider between the qty/pack block and the PRO usp block. */
+.buy-divider {
+  border: none;
+  border-top: 1px solid var(--c-border);
+  margin: 14px 0;
+}
 .hint a { color: var(--c-blue); }
 
 /* ===== READ-ONLY KEY SPECS (below configurator) ===== */
@@ -1158,6 +1204,7 @@ button { font: inherit; cursor: pointer; }
       <div class="pack-total" data-pack-total>= 50 Stück</div>
     </div>
     <div class="set-hint" data-set-hint style="display:none"></div>
+    <hr class="buy-divider">
 
     <div class="pro-usp">
       Kostenfreier Versand mit
@@ -1627,11 +1674,14 @@ function renderTile(value, label, secondary, isSelected, state, attrName, attrVa
   let attrs = '';
   if (isSelected) classes.push('selected');
   else if (state === 'dashed') classes.push('dashed');
-  else if (state === 'disabled') { classes.push('disabled'); attrs = 'disabled aria-disabled="true"'; }
+  // aria-disabled instead of the disabled HTML attribute, so the tile
+  // still receives hover/focus and can surface its tooltip. The click
+  // handler ignores aria-disabled tiles.
+  else if (state === 'disabled') { classes.push('disabled'); attrs = 'aria-disabled="true" tabindex="-1"'; }
   else if (state === 'hidden') return '';
 
-  const titleAttr = tooltip ? ' title="' + tooltip.replace(/"/g, '&quot;') + '"' : '';
-  return '<button' + titleAttr + ' class="' + classes.join(' ') + '" data-' + attrName + '="' + attrValue + '" ' + attrs + '>' +
+  const ttAttr = tooltip ? ' data-tooltip="' + tooltip.replace(/"/g, '&quot;') + '"' : '';
+  return '<button' + ttAttr + ' class="' + classes.join(' ') + '" data-' + attrName + '="' + attrValue + '" ' + attrs + '>' +
     '<span class="vtile-value">' + label + '</span>' +
     (secondary ? secondary : '') +
     '</button>';
@@ -1781,7 +1831,7 @@ function renderPrototype() {
 }
 
 function attachInteractions() {
-  document.querySelectorAll('[data-polzahl]:not(:disabled)').forEach(btn => {
+  document.querySelectorAll('[data-polzahl]:not([aria-disabled="true"])').forEach(btn => {
     btn.addEventListener('click', () => {
       const newP = Number(btn.dataset.polzahl);
       state.polzahl = newP;
@@ -1795,7 +1845,7 @@ function attachInteractions() {
       render();
     });
   });
-  document.querySelectorAll('[data-stil]:not(:disabled)').forEach(btn => {
+  document.querySelectorAll('[data-stil]:not([aria-disabled="true"])').forEach(btn => {
     btn.addEventListener('click', () => {
       const newS = btn.dataset.stil;
       state.stil = newS;
@@ -1808,7 +1858,7 @@ function attachInteractions() {
       render();
     });
   });
-  document.querySelectorAll('[data-hebel]:not(:disabled)').forEach(btn => {
+  document.querySelectorAll('[data-hebel]:not([aria-disabled="true"])').forEach(btn => {
     btn.addEventListener('click', () => {
       const newH = btn.dataset.hebel;
       state.hebel = newH;
