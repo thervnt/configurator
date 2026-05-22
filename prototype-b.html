@@ -956,7 +956,7 @@ button { font: inherit; cursor: pointer; }
   font-size: 18px;
   color: var(--c-text-secondary);
 }
-.qty-btn { padding: 0; }
+.qty-btn { padding: 4px; }
 .qty-btn-puck {
   display: inline-flex;
   align-items: center;
@@ -966,13 +966,13 @@ button { font: inherit; cursor: pointer; }
   border-radius: 2px;
   background: var(--c-bg-white);
   border: 1px solid var(--c-border);
-  color: inherit;
+  color: var(--c-text-secondary);
   font-size: 16px;
   line-height: 1;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s;
 }
-.qty-btn:hover .qty-btn-puck { border-color: var(--c-blue); color: var(--c-blue); }
-.qty-btn:active .qty-btn-puck { background: var(--c-bg-tint); }
+.qty-btn:hover .qty-btn-puck { background: #eaf0fe; color: var(--c-blue); }
+.qty-btn:active .qty-btn-puck { background: #d6e2fc; }
 .qty-btn:hover { color: var(--c-blue); }
 
 .pro-usp {
