@@ -402,6 +402,7 @@ button { font: inherit; cursor: pointer; }
 .vtile.selected {
   border: 2px solid var(--c-blue);
   padding: 9px 13px;
+  background: #eaf0fe;
 }
 .vtile.dashed {
   border-color: transparent;
@@ -903,6 +904,7 @@ button { font: inherit; cursor: pointer; }
 .pack-pill.selected {
   border: 2px solid var(--c-blue);
   padding: 7px 9px;
+  background: #eaf0fe;
 }
 .pack-pill-value {
   font-size: 14px;
@@ -939,8 +941,9 @@ button { font: inherit; cursor: pointer; }
 .qty-input-wrap input {
   background: transparent;
   border: none;
-  text-align: center;
-  width: 50px;
+  text-align: left;
+  width: 40px;
+  padding-left: 12px;
   font: inherit;
   font-size: 14px;
   font-weight: 500;
@@ -957,6 +960,18 @@ button { font: inherit; cursor: pointer; }
   color: var(--c-text-secondary);
 }
 .qty-btn { padding: 4px; }
+.qty-btn-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  padding-right: 4px;
+}
+.qty-unit {
+  font-size: 14px;
+  color: var(--c-text-secondary);
+  padding-right: 8px;
+}
 .qty-btn-puck {
   display: inline-flex;
   align-items: center;
@@ -1430,9 +1445,12 @@ button { font: inherit; cursor: pointer; }
     <div class="pack-row" data-pack-row></div>
     <div class="qty-row">
       <div class="qty-input-wrap">
-        <button class="qty-btn" data-qty-minus aria-label="Menge verringern"><span class="qty-btn-puck">−</span></button>
         <input type="text" value="1" data-qty>
-        <button class="qty-btn" data-qty-plus aria-label="Menge erhöhen"><span class="qty-btn-puck">+</span></button>
+        <span class="qty-unit" data-qty-unit>Set</span>
+        <div class="qty-btn-group">
+          <button class="qty-btn" data-qty-minus aria-label="Menge verringern"><span class="qty-btn-puck">−</span></button>
+          <button class="qty-btn" data-qty-plus aria-label="Menge erhöhen"><span class="qty-btn-puck">+</span></button>
+        </div>
       </div>
       <div class="pack-total" data-pack-total>= 50 Stück</div>
     </div>
@@ -1979,11 +1997,22 @@ function renderProductSide() {
     });
   }
 
-  // Total-Stück hint next to the qty input
+  // Unit label inside the qty stepper: "Stück" for the single-piece
+  // pack, "Set" for any multi-piece pack.
+  const qtyUnitEl = document.querySelector('[data-qty-unit]');
+  if (qtyUnitEl) qtyUnitEl.textContent = state.packSize === 1 ? 'Stück' : 'Set';
+
+  // Total-Stück hint next to the qty input. Hide when the unit is
+  // already a single piece (the number alone is already complete).
   const packTotalEl = document.querySelector('[data-pack-total]');
   if (packTotalEl) {
-    const totalPieces = state.qty * state.packSize;
-    packTotalEl.textContent = '= ' + totalPieces + ' Stück';
+    if (state.packSize === 1) {
+      packTotalEl.style.display = 'none';
+    } else {
+      packTotalEl.style.display = '';
+      const totalPieces = state.qty * state.packSize;
+      packTotalEl.textContent = '= ' + totalPieces + ' Stück';
+    }
   }
 
   // Set hint (kept for layout, populated only when buying multi-piece packs)
