@@ -394,11 +394,7 @@ button { font: inherit; cursor: pointer; }
   outline-offset: -3px;
   color: var(--c-text-tertiary);
 }
-.vtile.disabled {
-  opacity: 0.45;
-  background: var(--c-bg-tint);
-  cursor: not-allowed;
-}
+.vtile.disabled.placeholder { display: none; }
 .vtile-value {
   font-size: 15px;
   font-weight: 500;
@@ -467,7 +463,18 @@ button { font: inherit; cursor: pointer; }
   z-index: 50;
   pointer-events: none;
 }
-.vtile.disabled { cursor: not-allowed; }
+/* Disabled tile: muted via explicit colours, not parent opacity, so the
+   custom tooltip rendered as ::after stays at full intensity. */
+.vtile.disabled {
+  cursor: not-allowed;
+  background: var(--c-bg-tint);
+  border-color: var(--c-border);
+  color: var(--c-text-tertiary);
+}
+.vtile.disabled .vtile-value,
+.vtile.disabled .vtile-price,
+.vtile.disabled .vtile-unit { color: var(--c-text-tertiary); }
+.vtile.disabled .vtile-divider { background: var(--c-border); }
 
 /* Soft divider between the qty/pack block and the PRO usp block. */
 .buy-divider {
@@ -1799,15 +1806,15 @@ function renderPrototype() {
 
   let hintText = '';
   if (APPROACH === 'A') {
-    hintText = 'Gestrichelte Optionen ändern automatisch Ihre weiteren Auswahlen.';
+    hintText = 'Gestrichelte Optionen sind mit Ihrer aktuellen Auswahl nicht direkt verfügbar. Bei Klick werden andere Attribute automatisch angepasst.';
   } else if (APPROACH === 'B') {
-    hintText = 'Ausgegraute Optionen sind nicht verfügbar. Bitte andere Auswahl anpassen.';
+    hintText = 'Ausgegraute Optionen sind mit Ihrer aktuellen Auswahl nicht verfügbar. Bitte Polzahl, Stil oder Hebel-Variante ändern.';
   } else if (APPROACH === 'C') {
     const totalHidden = (stilOptions.length - visibleStil.length) + (hebelOptions.length - visibleHebel.length);
     if (state.showAll) {
-      hintText = 'Alle Optionen angezeigt. <a href="#" data-show-all>Nur kompatible anzeigen</a>.';
+      hintText = 'Alle Optionen werden angezeigt. <a href="#" data-show-all>Nur kompatible anzeigen</a>.';
     } else if (totalHidden > 0) {
-      hintText = totalHidden + ' nicht kompatible Option' + (totalHidden > 1 ? 'en' : '') + ' ausgeblendet. <a href="#" data-show-all>Alle anzeigen</a>.';
+      hintText = 'Nicht kompatible Optionen sind ausgeblendet (' + totalHidden + '). <a href="#" data-show-all>Alle anzeigen</a>.';
     } else {
       hintText = 'Alle Optionen sind mit Polzahl ' + p + ' kompatibel.';
     }
