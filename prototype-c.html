@@ -956,6 +956,23 @@ button { font: inherit; cursor: pointer; }
   font-size: 18px;
   color: var(--c-text-secondary);
 }
+.qty-btn { padding: 0; }
+.qty-btn-puck {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 2px;
+  background: var(--c-bg-white);
+  border: 1px solid var(--c-border);
+  color: inherit;
+  font-size: 16px;
+  line-height: 1;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.qty-btn:hover .qty-btn-puck { border-color: var(--c-blue); color: var(--c-blue); }
+.qty-btn:active .qty-btn-puck { background: var(--c-bg-tint); }
 .qty-btn:hover { color: var(--c-blue); }
 
 .pro-usp {
@@ -1413,9 +1430,9 @@ button { font: inherit; cursor: pointer; }
     <div class="pack-row" data-pack-row></div>
     <div class="qty-row">
       <div class="qty-input-wrap">
-        <button class="qty-btn" data-qty-minus>−</button>
+        <button class="qty-btn" data-qty-minus aria-label="Menge verringern"><span class="qty-btn-puck">−</span></button>
         <input type="text" value="1" data-qty>
-        <button class="qty-btn" data-qty-plus>+</button>
+        <button class="qty-btn" data-qty-plus aria-label="Menge erhöhen"><span class="qty-btn-puck">+</span></button>
       </div>
       <div class="pack-total" data-pack-total>= 50 Stück</div>
     </div>
