@@ -1458,7 +1458,6 @@ button { font: inherit; cursor: pointer; }
       </div>
       <div class="pack-total" data-pack-total>= 50 Stück</div>
     </div>
-    <div class="set-hint" data-set-hint style="display:none"></div>
     <hr class="buy-divider">
 
     <div class="pro-usp">
@@ -2025,18 +2024,6 @@ function renderProductSide() {
     }
   }
 
-  // Set hint (kept for layout, populated only when buying multi-piece packs)
-  const hintEl = document.querySelector('[data-set-hint]');
-  if (hintEl) {
-    if (state.packSize > 1 && state.qty > 1) {
-      hintEl.textContent = state.qty + ' × ' + state.packSize + ' Stück = ' + (state.qty * state.packSize) + ' Stück';
-      hintEl.style.display = '';
-    } else {
-      hintEl.textContent = '';
-      hintEl.style.display = 'none';
-    }
-  }
-
   // Key-specs strip below configurator (read-only)
   const keySpecsEl = document.querySelector('[data-key-specs]');
   if (keySpecsEl && avail) {
@@ -2331,18 +2318,25 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') overlay.classList.remove('active');
 });
 
-// Delivery date = current date + 1 day, German short format ("Mi., 26. Nov.")
-const deliveryDateEl = document.querySelector('[data-delivery-date]');
-if (deliveryDateEl) {
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
+// Delivery date follows the 17:00 Berlin cutoff. Before 17:00:
+// next day. After 17:00: day after next.
+function renderDeliveryDate() {
+  const el = document.querySelector('[data-delivery-date]');
+  if (!el) return;
+  // "now" rebased into Berlin wall-clock so getHours()/getDate() are
+  // Berlin values regardless of where the page renders.
+  const berlinNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Berlin' }));
+  const daysAhead = berlinNow.getHours() < 17 ? 1 : 2;
+  const target = new Date(berlinNow);
+  target.setDate(target.getDate() + daysAhead);
   const weekdays = ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.'];
   const months = ['Jan.', 'Feb.', 'Mär.', 'Apr.', 'Mai', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Okt.', 'Nov.', 'Dez.'];
-  deliveryDateEl.textContent =
-    weekdays[tomorrow.getDay()] + ', ' +
-    tomorrow.getDate() + '. ' +
-    months[tomorrow.getMonth()];
+  el.textContent = weekdays[target.getDay()] + ', ' + target.getDate() + '. ' + months[target.getMonth()];
 }
+renderDeliveryDate();
+// Re-render at the next 17:00 boundary so the page doesn't stay
+// stuck on the old date when the cutoff passes mid-session.
+setInterval(renderDeliveryDate, 60 * 1000);
 
 // Countdown to today's 17:00 Europe/Berlin cutoff. If already past, count to tomorrow's 17:00.
 const countdownEl = document.querySelector('[data-countdown]');
