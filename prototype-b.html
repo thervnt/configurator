@@ -937,14 +937,16 @@ button { font: inherit; cursor: pointer; }
   border-radius: var(--radius-sm);
   flex: 0 0 180px;
   width: 180px;
+  padding-left: 12px;
 }
 .qty-input-wrap input {
   background: transparent;
   border: none;
-  text-align: right;
-  width: 32px;
-  padding-left: 12px;
-  padding-right: 0;
+  text-align: left;
+  padding: 0;
+  min-width: 1ch;
+  width: 1ch;
+  field-sizing: content;
   font: inherit;
   font-size: 14px;
   font-weight: 500;
@@ -960,7 +962,7 @@ button { font: inherit; cursor: pointer; }
   font-size: 18px;
   color: var(--c-text-secondary);
 }
-.qty-btn { padding: 4px 2px; }
+.qty-btn { padding: 4px 1px; }
 .qty-btn-group {
   display: flex;
   align-items: center;
@@ -2003,6 +2005,12 @@ function renderProductSide() {
   // pack, "Set" for any multi-piece pack.
   const qtyUnitEl = document.querySelector('[data-qty-unit]');
   if (qtyUnitEl) qtyUnitEl.textContent = state.packSize === 1 ? 'Stück' : 'Set';
+
+  // Size the qty input to its content so the unit label tracks
+  // 4 px from the value across "1" → "99+". field-sizing: content
+  // would do this CSS-natively but isn't reliable everywhere yet.
+  const qtyInput = document.querySelector('[data-qty]');
+  if (qtyInput) qtyInput.style.width = Math.max(1, String(qtyInput.value).length) + 'ch';
 
   // Total-Stück hint next to the qty input. Hide when the unit is
   // already a single piece (the number alone is already complete).
