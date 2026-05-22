@@ -1995,7 +1995,9 @@ function renderProductSide() {
     packRow.querySelectorAll('[data-pack]').forEach(btn => {
       btn.addEventListener('click', () => {
         state.packSize = Number(btn.dataset.pack);
-        renderProductSide();
+        // Full re-render so the polzahl tile prices stay in sync with
+        // the per-piece price in the buy box.
+        render();
       });
     });
   }
@@ -2149,10 +2151,24 @@ function renderPrototype() {
       ? true  // step 1, always show
       : combosFor(parts => Number(parts[0]) === opt.id && parts[1] === s && parts[2] === h).length > 0;
     const tState = tileStateFor(isCompat, isSel);
+    // Show the pack-size price the user would actually land on
+    // for this polzahl. Mirrors autoSelectBestseller: keep current
+    // packSize if valid, else 25, else default Set.
+    const _tileSizes = packSizesByPolzahl[opt.id] || [];
+    let _tilePack = state.packSize;
+    if (_tileSizes.indexOf(_tilePack) === -1) {
+      _tilePack = _tileSizes.indexOf(25) !== -1
+        ? 25
+        : (defaultPackByPolzahl[opt.id] || _tileSizes[0] || 1);
+    }
+    const _tilePackPrice = (safePricing.packs && safePricing.packs[_tilePack] != null)
+      ? safePricing.packs[_tilePack]
+      : safePricing.price;
+    const _tileUnit = _tilePack > 0 ? _tilePackPrice / _tilePack : safePricing.unitPrice;
     const secondary =
       '<span class="vtile-divider"></span>' +
-      '<span class="vtile-price">' + fmtEur(safePricing.price) + '</span>' +
-      '<span class="vtile-unit">' + safePricing.unitPrice.toFixed(2).replace('.', ',') + ' € / Stück</span>';
+      '<span class="vtile-price">' + fmtEur(_tilePackPrice) + '</span>' +
+      '<span class="vtile-unit">' + _tileUnit.toFixed(2).replace('.', ',') + ' € / Stück</span>';
     return renderTile(opt.id, opt.label, secondary, isSel, tState, 'polzahl', opt.id, tileTooltip(p, s, h, 'polzahl', opt.id, tState));
   }).join('');
 
