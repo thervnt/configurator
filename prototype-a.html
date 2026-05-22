@@ -686,14 +686,13 @@ button { font: inherit; cursor: pointer; }
   font-weight: 400;
 }
 .pack-row {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 6px;
   margin-bottom: 10px;
 }
 .pack-pill {
-  flex: 0 1 calc(33.333% - 4px);
-  min-width: 0;
+  width: 100%;
   background: var(--c-bg-white);
   border: 1px solid var(--c-border);
   border-radius: var(--radius-sm);
