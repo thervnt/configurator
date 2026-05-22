@@ -274,6 +274,7 @@ button { font: inherit; cursor: pointer; }
   transition: border-color 0.15s;
 }
 .main-image:hover { border-color: var(--c-border-strong); }
+.main-image.is-polzahl10 { padding: 90px; }
 .main-image img {
   max-width: 100%;
   max-height: 100%;
@@ -1157,7 +1158,7 @@ button { font: inherit; cursor: pointer; }
       </div>
       <div class="pack-total" data-pack-total>= 50 Stück</div>
     </div>
-    <div class="set-hint" data-set-hint></div>
+    <div class="set-hint" data-set-hint style="display:none"></div>
 
     <div class="pro-usp">
       Kostenfreier Versand mit
@@ -1516,7 +1517,9 @@ function renderProductSide() {
 
   // Image
   const sku = resolveImageSku(p, s, h);
-  document.querySelector('[data-main-img]').src = imageBySku[sku];
+  const _mainImg = document.querySelector('[data-main-img]');
+  _mainImg.src = imageBySku[sku];
+  _mainImg.parentElement.classList.toggle('is-polzahl10', sku === '221-420' || sku === '221-430');
 
   // IDs
   if (avail) {
@@ -1562,7 +1565,7 @@ function renderProductSide() {
       const sel = sz === state.packSize ? ' selected' : '';
       const label = sz === 1
         ? '<span class="pack-pill-value">1 Stück</span><span class="pack-pill-sub">Einzelstück</span>'
-        : '<span class="pack-pill-value">' + sz + ' Stück</span><span class="pack-pill-sub">1 Set</span>';
+        : '<span class="pack-pill-value">' + sz + ' Stück</span><span class="pack-pill-sub">Set</span>';
       return '<button class="pack-pill' + sel + '" data-pack="' + sz + '">' + label + '</button>';
     }).join('');
     packRow.querySelectorAll('[data-pack]').forEach(btn => {
