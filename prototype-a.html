@@ -647,6 +647,91 @@ button { font: inherit; cursor: pointer; }
 }
 
 .buy-box .bestseller-pill { margin-bottom: 8px; }
+
+.price-savings {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+  min-height: 20px;
+}
+.price-was {
+  color: var(--c-text-tertiary);
+  font-size: 13px;
+  text-decoration: line-through;
+  font-variant-numeric: tabular-nums;
+}
+.discount-badge-wrap {
+  position: relative;
+  display: inline-flex;
+  outline: none;
+}
+.discount-badge {
+  background: #d9234c;
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: help;
+  user-select: none;
+}
+.discount-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  background: var(--c-bg-white);
+  color: var(--c-text);
+  border: 1px solid var(--c-border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.18), 0 2px 8px rgba(15, 23, 42, 0.08);
+  z-index: 100;
+  font-size: 13px;
+  width: max-content;
+  max-width: 420px;
+  display: none;
+  text-align: left;
+  white-space: nowrap;
+}
+.discount-badge-wrap:hover .discount-popover,
+.discount-badge-wrap:focus-within .discount-popover { display: block; }
+.discount-popover-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.discount-table { width: 100%; border-collapse: collapse; }
+.discount-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--c-text-secondary);
+  padding: 6px 12px 8px 0;
+  border-bottom: 1px solid var(--c-border);
+}
+.discount-table th:last-child, .discount-table td:last-child {
+  text-align: right; padding-right: 0;
+}
+.discount-table td {
+  padding: 7px 12px 7px 0;
+  font-variant-numeric: tabular-nums;
+}
+.discount-table tr.current td {
+  color: var(--c-blue);
+  font-weight: 600;
+  background: #eaf0fe;
+}
+.discount-table tr.current td:first-child { border-radius: 4px 0 0 4px; padding-left: 6px; }
+.discount-table tr.current td:last-child  { border-radius: 0 4px 4px 0; padding-right: 6px; }
+.discount-footnote {
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--c-text-tertiary);
+}
+
 .beste-wahl-pill--unused {
   display: inline-block;
   background: #ffe9d6;
@@ -1253,6 +1338,13 @@ button { font: inherit; cursor: pointer; }
   <!-- RIGHT BUY BOX -->
   <aside class="buy-box">
     <span class="bestseller-pill" data-bestseller-pill style="display:none">Bestseller</span>
+    <div class="price-savings" data-price-savings>
+      <span class="price-was" data-list-price></span>
+      <span class="discount-badge-wrap" data-discount-badge-wrap tabindex="0">
+        <span class="discount-badge" data-discount-badge></span>
+        <div class="discount-popover" data-discount-popover role="dialog" aria-label="Mengenrabatte"></div>
+      </span>
+    </div>
     <div class="price-main">
       <span class="amount" data-price>5,25 €</span>
       <span class="unit" data-unit>(0,35€/Stück)</span>
@@ -1418,13 +1510,14 @@ const skuByCombo = {
   '10|4|green-range': '221-430'
 };
 
-// Pricing per Polzahl (price per Set, unit price per Stück)
-// Approximate Conrad-style retail pricing
-const pricingByPolzahl = {
-  2:  { price: 11.99, unitPrice: 0.12 },
-  3:  { price: 14.99, unitPrice: 0.30 },
-  5:  { price: 13.79, unitPrice: 0.55 },
-  10: { price: 26.50, unitPrice: 2.65 }
+// Per-pack-size catalog prices. The "1" key is the premium
+// per-piece price - used as the discount baseline. Larger
+// packs are sold at a discount vs. that baseline.
+const packPriceByPolzahl = {
+  2:  { 1: 0.20, 50:  8.99, 100: 11.99 },
+  3:  { 1: 0.40, 25:  7.99, 50: 14.99, 100: 26.99 },
+  5:  { 1: 0.70, 15:  9.50, 25: 13.79, 50: 26.99 },
+  10: { 1: 3.20, 10: 26.50, 25: 62.99 }
 };
 // Green Range carries ~8% surcharge
 const greenRangeSurcharge = 1.08;
@@ -1432,14 +1525,19 @@ const greenRangeSurcharge = 1.08;
 const sixMmSurcharge = 1.15;
 
 function getPricing(p, s, h) {
-  const base = pricingByPolzahl[p];
-  if (!base) return { price: 0, unitPrice: 0 };
+  const base = packPriceByPolzahl[p];
+  if (!base) return { packs: {}, price: 0, unitPrice: 0, baselineUnit: 0 };
   let m = 1;
   if (h === 'green-range') m *= greenRangeSurcharge;
   if (s === '6') m *= sixMmSurcharge;
+  const packs = {};
+  for (const sz in base) packs[sz] = base[sz] * m;
+  const dp = defaultPackByPolzahl[p] || 1;
   return {
-    price: base.price * m,
-    unitPrice: base.unitPrice * m
+    packs: packs,
+    price: packs[dp] || 0,
+    unitPrice: dp ? (packs[dp] || 0) / dp : 0,
+    baselineUnit: packs[1] != null ? packs[1] : ((packs[dp] || 0) / dp)
   };
 }
 
@@ -1670,24 +1768,66 @@ function renderProductSide() {
     document.querySelector('[data-ean]').textContent = eanMap[skuExact] || '4050821808442';
   }
 
-  // Price - prefer the catalogue Set price when the chosen pack matches
-  // the default Set for this Polzahl (keeps the buy box in sync with the
-  // configurator tile, which shows pricing.price). For other pack sizes
-  // (e.g. Einzelstück or non-default Set sizes) fall back to a per-piece
-  // calculation: packSize * unitPrice.
+  // Price - per-pack catalog price, plus list price (=baselineUnit *
+  // packSize) and discount %. Pack catalog prices come straight from
+  // pricing.packs[sz]; the discount badge surfaces savings vs. the
+  // single-piece baseline (1-Stück pack).
   if (avail) {
-    const defaultPack = defaultPackByPolzahl[p] || 1;
-    let total;
-    if (state.packSize === defaultPack) {
-      total = pricing.price * state.qty;
-    } else if (state.packSize === 1) {
-      total = pricing.unitPrice * state.qty;
-    } else {
-      total = pricing.unitPrice * state.packSize * state.qty;
-    }
-    document.querySelector('[data-price]').textContent = total.toFixed(2).replace('.', ',') + ' €';
+    const sz = state.packSize;
+    const packPrice = (pricing.packs && pricing.packs[sz] != null)
+      ? pricing.packs[sz]
+      : pricing.baselineUnit * sz;
+    const actual = packPrice * state.qty;
+    const list   = pricing.baselineUnit * sz * state.qty;
+    const savingsPct = list > 0 ? (1 - actual / list) * 100 : 0;
+    const showDiscount = savingsPct >= 1;
+    const actualUnit = sz > 0 ? packPrice / sz : pricing.unitPrice;
+
+    document.querySelector('[data-price]').textContent = actual.toFixed(2).replace('.', ',') + ' €';
     document.querySelector('[data-unit]').textContent =
-      '(' + pricing.unitPrice.toFixed(2).replace('.', ',') + '€/Stück)';
+      '(' + actualUnit.toFixed(2).replace('.', ',') + '€/Stück)';
+
+    const listEl    = document.querySelector('[data-list-price]');
+    const badgeEl   = document.querySelector('[data-discount-badge]');
+    const badgeWrap = document.querySelector('[data-discount-badge-wrap]');
+    if (showDiscount) {
+      listEl.textContent = list.toFixed(2).replace('.', ',') + ' €';
+      badgeEl.textContent = '\u2212' + Math.round(savingsPct) + '%';
+      listEl.style.display = '';
+      if (badgeWrap) badgeWrap.style.display = '';
+    } else {
+      listEl.style.display = 'none';
+      if (badgeWrap) badgeWrap.style.display = 'none';
+    }
+
+    // Popover content: full Mengenrabatte table for the current variant.
+    const popEl = document.querySelector('[data-discount-popover]');
+    if (popEl) {
+      const sizes = packSizesByPolzahl[p] || [];
+      const rows = sizes.map(function (packSz) {
+        const price = (pricing.packs && pricing.packs[packSz] != null) ? pricing.packs[packSz] : null;
+        if (price == null) return '';
+        const listSz = pricing.baselineUnit * packSz;
+        const sav = listSz - price;
+        const pct = (sav > 0.01 && listSz > 0) ? Math.round(sav / listSz * 100) : 0;
+        const cur = packSz === sz;
+        const savCell = pct > 0
+          ? ('\u2212' + pct + '% = ' + sav.toFixed(2).replace('.', ',') + ' \u20ac')
+          : '\u2014';
+        return '<tr' + (cur ? ' class="current"' : '') + '>' +
+          '<td>' + packSz + ' Stück</td>' +
+          '<td>' + savCell + '</td>' +
+          '<td>' + price.toFixed(2).replace('.', ',') + ' €</td>' +
+          '</tr>';
+      }).join('');
+      popEl.innerHTML =
+        '<div class="discount-popover-title">Mengenrabatte</div>' +
+        '<table class="discount-table">' +
+          '<thead><tr><th>Menge (Stück)</th><th>Ersparnis</th><th>Verpackungspreis</th></tr></thead>' +
+          '<tbody>' + rows + '</tbody>' +
+        '</table>' +
+        '<div class="discount-footnote">Vergleich zum Einzelstückpreis. Preise zzgl. MwSt.</div>';
+    }
   }
 
   // Bestseller pill: only highlighted for the 25-Stück Set. Other
@@ -1932,6 +2072,7 @@ function attachInteractions() {
       const newP = Number(btn.dataset.polzahl);
       state.polzahl = newP;
       state.interacted = true;
+      autoSelectBestseller();
       if (APPROACH === 'C') state.showAll = false;
       if (APPROACH !== 'B') {
         const resolved = resolveCombo(newP, state.stil, state.hebel, 'p');
@@ -1946,6 +2087,7 @@ function attachInteractions() {
       const newS = btn.dataset.stil;
       state.stil = newS;
       state.interacted = true;
+      autoSelectBestseller();
       if (APPROACH !== 'B') {
         const resolved = resolveCombo(state.polzahl, newS, state.hebel, 's');
         state.polzahl = resolved.p;
@@ -1959,6 +2101,7 @@ function attachInteractions() {
       const newH = btn.dataset.hebel;
       state.hebel = newH;
       state.interacted = true;
+      autoSelectBestseller();
       if (APPROACH !== 'B') {
         const resolved = resolveCombo(state.polzahl, state.stil, newH, 'h');
         state.polzahl = resolved.p;
@@ -1975,6 +2118,12 @@ function attachInteractions() {
       render();
     });
   }
+}
+
+function autoSelectBestseller() {
+  const sizes = packSizesByPolzahl[state.polzahl] || [];
+  if (sizes.indexOf(25) !== -1) state.packSize = 25;
+  else state.packSize = defaultPackByPolzahl[state.polzahl] || sizes[0] || 1;
 }
 
 function render() {
