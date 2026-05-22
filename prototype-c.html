@@ -763,6 +763,44 @@ button { font: inherit; cursor: pointer; }
   margin-bottom: 14px;
 }
 
+.stock-text.is-soldout { color: #d9234c; font-weight: 600; }
+.stock-text.is-soldout::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d9234c;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.cta.is-disabled {
+  background: #d6d8de;
+  color: #6e7588;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.cta.is-disabled:hover { background: #d6d8de; }
+.notify-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 14px;
+  margin-top: 10px;
+  border: 1px solid var(--c-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--c-bg-white);
+  color: var(--c-text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+}
+.notify-link:hover { background: var(--c-bg-tint); border-color: var(--c-text-secondary); }
+.notify-link svg { width: 16px; height: 16px; flex-shrink: 0; }
+
 .stock-text {
   font-size: 14px;
   font-weight: 500;
@@ -1382,6 +1420,10 @@ button { font: inherit; cursor: pointer; }
       <svg class="pro-logo" width="38" height="9" viewBox="0 0 38 9" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M22.5387 8.85372L20.3429 6.05665C22.3755 5.61932 23.4462 4.47042 23.4462 2.69746C23.4462 0.774114 22.3266 0 19.5155 0H13.6735L11.6777 8.85372H15.1095L16.5947 2.2729H18.7727C19.7467 2.2729 20.2576 2.57252 20.2576 3.13458C20.2576 3.93394 19.7952 4.33317 18.8462 4.33317H16.4482L18.0915 7.16776C19.0528 8.80413 19.138 8.85372 21.0612 8.85372H22.5387Z" fill="#376EEF"/><path fill-rule="evenodd" clip-rule="evenodd" d="M7.09494 2.2729C8.06898 2.2729 8.57991 2.57252 8.57991 3.13458C8.57991 3.93394 8.11744 4.33316 7.1685 4.33316H4.77051L5.82403 6.15128H7.2955C8.31421 6.15128 8.66512 6.05665 8.66512 6.05665C10.6978 5.61933 11.7685 4.47042 11.7685 2.69745C11.7685 0.774122 10.6489 0 7.83776 0H1.99574L0 8.85372H3.43179L4.91696 2.2729H7.09494Z" fill="#376EEF"/><path fill-rule="evenodd" clip-rule="evenodd" d="M7.09494 2.2729C8.06898 2.2729 8.57991 2.57252 8.57991 3.13458C8.57991 3.93394 8.11744 4.33316 7.1685 4.33316H4.452L4.04168 6.15128H7.2955C8.31421 6.15128 8.66512 6.05665 8.66512 6.05665C10.6978 5.61933 11.7685 4.47042 11.7685 2.69745C11.7685 0.774122 10.6489 0 7.83776 0H1.99574L0 8.85372H3.43179L4.91696 2.2729H7.09494Z" fill="#376EEF"/><path d="M34.2872 0H29.1727C25.9115 0 24.1348 2.0724 24.1348 5.89341C24.1348 8.09139 25.0718 8.85305 27.7977 8.85305L32.8025 8.85259C36.1126 8.85259 37.9986 6.83001 37.9986 3.27142C37.9986 0.874272 37.0132 0 34.2872 0ZM31.7927 6.71809L29.574 6.71786C28.0535 6.71786 27.5744 6.39289 27.5744 5.30668C27.5744 3.3961 28.5886 2.34712 30.3531 2.34712L32.5961 2.34735C33.9954 2.34735 34.3604 2.62187 34.3604 3.67108C34.3604 5.65612 33.4596 6.71809 31.7927 6.71809Z" fill="#376EEF"/></svg>
     </div>
 
+    <button class="notify-link" data-notify-btn type="button" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      Benachrichtigen, wenn verfügbar
+    </button>
     <div class="cta-row">
       <button class="wishlist-btn" aria-label="Auf Wunschliste">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -1541,6 +1583,48 @@ function getPricing(p, s, h) {
 }
 
 function isAvailable(p, s, h) { return !!matrix[p + '|' + s + '|' + h]; }
+
+// Sold-out catalog: one or more SKUs that are temporarily unavailable.
+// The combo is still listed in the matrix (so users can navigate to it),
+// but the buy box flips to a sold-out state and the CTA is disabled.
+const SOLD_OUT_SKUS = { '221-2415': true };
+
+function isSoldOut(p, s, h) {
+  if (!isAvailable(p, s, h)) return false;
+  const sku = skuByCombo[p + '|' + s + '|' + h];
+  return !!SOLD_OUT_SKUS[sku];
+}
+
+function applySoldOutState(soldOut) {
+  const stockEl = document.querySelector('.stock-text');
+  if (stockEl) {
+    if (soldOut) {
+      stockEl.classList.add('is-soldout');
+      stockEl.textContent = 'Ausverkauft';
+    } else {
+      stockEl.classList.remove('is-soldout');
+      stockEl.innerHTML = '<span data-stock>264.150</span> Stück auf Lager';
+    }
+  }
+  const delivery  = document.querySelector('.delivery-pill');
+  const countdown = document.querySelector('.countdown');
+  if (delivery)  delivery.style.display  = soldOut ? 'none' : '';
+  if (countdown) countdown.style.display = soldOut ? 'none' : '';
+
+  const cta = document.querySelector('.cta');
+  if (cta) {
+    if (soldOut) {
+      cta.classList.add('is-disabled');
+      cta.setAttribute('aria-disabled', 'true');
+    } else {
+      cta.classList.remove('is-disabled');
+      cta.removeAttribute('aria-disabled');
+    }
+  }
+  const notify = document.querySelector('[data-notify-btn]');
+  if (notify) notify.style.display = soldOut ? '' : 'none';
+}
+
 function combosFor(filterFn) {
   return Object.keys(matrix).filter(k => matrix[k] && filterFn(k.split('|')));
 }
@@ -1767,6 +1851,10 @@ function renderProductSide() {
     document.querySelector('[data-ean]').textContent = eanMap[skuExact] || '4050821808442';
   }
 
+  // Sold-out state precedes the discount story.
+  const soldOut = avail && isSoldOut(p, s, h);
+  applySoldOutState(soldOut);
+
   // Price - per-pack catalog price, plus list price (=baselineUnit *
   // packSize) and discount %. Pack catalog prices come straight from
   // pricing.packs[sz]; the discount badge surfaces savings vs. the
@@ -1781,9 +1869,8 @@ function renderProductSide() {
     const savingsPct = list > 0 ? (1 - actual / list) * 100 : 0;
     // Don't surface the discount story (strike-through, red badge,
     // Bestseller pill) on first arrival - only once the user has
-    // engaged with the configurator. This keeps the initial impression
-    // a single clear catalog price.
-    const showDiscount = savingsPct >= 1 && state.interacted;
+    // engaged with the configurator. Hide entirely when sold out.
+    const showDiscount = savingsPct >= 1 && state.interacted && !soldOut;
     const actualUnit = sz > 0 ? packPrice / sz : pricing.unitPrice;
 
     document.querySelector('[data-price]').textContent = actual.toFixed(2).replace('.', ',') + ' €';
@@ -1839,11 +1926,11 @@ function renderProductSide() {
   }
 
   // Bestseller pill: only highlighted for the 25-Stück Set, AND only
-  // after the user has interacted with the configurator. Keeps the
-  // initial impression clean (no "Bestseller" framing on first
-  // arrival).
+  // after the user has interacted with the configurator. Hide when
+  // the variant is sold out. Keeps the initial impression clean
+  // (no "Bestseller" framing on first arrival or on a sold-out item).
   const bestsellerPill = document.querySelector('[data-bestseller-pill]');
-  if (bestsellerPill) bestsellerPill.style.display = (state.packSize === 25 && state.interacted) ? 'inline-block' : 'none';
+  if (bestsellerPill) bestsellerPill.style.display = (state.packSize === 25 && state.interacted && !soldOut) ? 'inline-block' : 'none';
 
   // Pack-size pills
   const packRow = document.querySelector('[data-pack-row]');
@@ -2291,6 +2378,14 @@ document.addEventListener('click', e => {
     document.body.appendChild(el);
     activeToast = el;
     activeTimer = setTimeout(hideToast, 7000);
+  }
+
+  // Sold-out notify-me button: tap → toast confirmation
+  const notifyBtn = document.querySelector('[data-notify-btn]');
+  if (notifyBtn) {
+    notifyBtn.addEventListener('click', () => {
+      showToast('Wir benachrichtigen Sie, sobald der Artikel verfügbar ist.');
+    });
   }
 
   wishlistBtn.setAttribute('aria-pressed', 'false');
