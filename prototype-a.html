@@ -871,7 +871,72 @@ button { font: inherit; cursor: pointer; }
   justify-content: center;
   color: var(--c-text-secondary);
 }
-.wishlist-btn svg { width: 20px; height: 20px; }
+.wishlist-btn svg { width: 20px; height: 20px; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.wishlist-btn svg path { transition: fill 0.18s ease, stroke 0.18s ease; }
+.wishlist-btn { position: relative; overflow: visible; }
+.wishlist-btn.active { color: var(--c-blue); border-color: var(--c-blue); background: #eaf0fe; }
+.wishlist-btn.active svg path { fill: var(--c-blue); stroke: var(--c-blue); }
+.wishlist-btn.bounce svg { animation: wishlist-bounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes wishlist-bounce {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.28); }
+  62%  { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+.wishlist-btn::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 8px;
+  border: 2px solid var(--c-blue);
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.9);
+}
+.wishlist-btn.pulse::after { animation: wishlist-pulse 0.65s ease-out; }
+@keyframes wishlist-pulse {
+  0%   { opacity: 0.55; transform: scale(0.9); }
+  100% { opacity: 0;    transform: scale(1.55); }
+}
+
+/* Toast (top-left, fixed) */
+.toast {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  z-index: 2000;
+  background: var(--c-navy);
+  color: var(--c-text-on-dark);
+  padding: 12px 12px 12px 16px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.22);
+  font-size: 14px;
+  font-weight: 500;
+  max-width: 380px;
+  animation: toast-slide-in 0.28s ease;
+}
+.toast.out { animation: toast-slide-out 0.22s ease forwards; }
+.toast-msg { display: inline-flex; align-items: center; gap: 10px; }
+.toast-msg svg { flex-shrink: 0; }
+.toast-close {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.75;
+  border-radius: 4px;
+}
+.toast-close:hover { opacity: 1; background: rgba(255,255,255,0.10); }
+.toast-close svg { display: block; }
+@keyframes toast-slide-in  { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes toast-slide-out { from { opacity: 1; transform: translateX(0); }    to { opacity: 0; transform: translateX(-12px); } }
 
 .return-note {
   font-size: 12px;
@@ -2008,6 +2073,63 @@ document.addEventListener('click', e => {
     document.body.removeChild(ta);
   }
 });
+
+// Wishlist toggle + toast (added to wishlist)
+(function () {
+  const wishlistBtn = document.querySelector('.wishlist-btn');
+  if (!wishlistBtn) return;
+  let activeToast = null;
+  let activeTimer = null;
+
+  function hideToast() {
+    if (activeTimer) { clearTimeout(activeTimer); activeTimer = null; }
+    if (activeToast) {
+      const el = activeToast;
+      activeToast = null;
+      el.classList.add('out');
+      setTimeout(() => el.remove(), 240);
+    }
+  }
+
+  function showToast(message) {
+    hideToast();
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.setAttribute('role', 'status');
+    el.innerHTML =
+      '<span class="toast-msg">' +
+        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>' +
+        message +
+      '</span>' +
+      '<button type="button" class="toast-close" aria-label="Schließen">' +
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+      '</button>';
+    el.querySelector('.toast-close').addEventListener('click', hideToast);
+    document.body.appendChild(el);
+    activeToast = el;
+    activeTimer = setTimeout(hideToast, 7000);
+  }
+
+  wishlistBtn.setAttribute('aria-pressed', 'false');
+  wishlistBtn.addEventListener('click', () => {
+    const wasActive = wishlistBtn.classList.contains('active');
+    if (wasActive) {
+      wishlistBtn.classList.remove('active');
+      wishlistBtn.setAttribute('aria-pressed', 'false');
+      wishlistBtn.setAttribute('aria-label', 'Auf Wunschliste');
+      hideToast();
+      return;
+    }
+    wishlistBtn.classList.add('active');
+    wishlistBtn.setAttribute('aria-pressed', 'true');
+    wishlistBtn.setAttribute('aria-label', 'Von Wunschliste entfernen');
+    // Re-trigger animations
+    wishlistBtn.classList.remove('bounce', 'pulse');
+    void wishlistBtn.offsetWidth;
+    wishlistBtn.classList.add('bounce', 'pulse');
+    showToast('Zur Wunschliste hinzugefügt');
+  });
+})();
 
 render();
 </script>
