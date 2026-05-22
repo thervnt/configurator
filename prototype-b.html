@@ -1663,11 +1663,22 @@ function renderProductSide() {
     document.querySelector('[data-ean]').textContent = eanMap[skuExact] || '4050821808442';
   }
 
-  // Price - quantity is always qty * packSize in Stück
+  // Price - prefer the catalogue Set price when the chosen pack matches
+  // the default Set for this Polzahl (keeps the buy box in sync with the
+  // configurator tile, which shows pricing.price). For other pack sizes
+  // (e.g. Einzelstück or non-default Set sizes) fall back to a per-piece
+  // calculation: packSize * unitPrice.
   if (avail) {
-    const totalPieces = state.qty * state.packSize;
-    const total = (totalPieces * pricing.unitPrice).toFixed(2).replace('.', ',') + ' €';
-    document.querySelector('[data-price]').textContent = total;
+    const defaultPack = defaultPackByPolzahl[p] || 1;
+    let total;
+    if (state.packSize === defaultPack) {
+      total = pricing.price * state.qty;
+    } else if (state.packSize === 1) {
+      total = pricing.unitPrice * state.qty;
+    } else {
+      total = pricing.unitPrice * state.packSize * state.qty;
+    }
+    document.querySelector('[data-price]').textContent = total.toFixed(2).replace('.', ',') + ' €';
     document.querySelector('[data-unit]').textContent =
       '(' + pricing.unitPrice.toFixed(2).replace('.', ',') + '€/Stück)';
   }
