@@ -1279,7 +1279,7 @@ button { font: inherit; cursor: pointer; }
         </a>
         <a href="#" class="header-action">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          <span class="icon-badge">1</span>
+          <span class="icon-badge" data-wishlist-badge>1</span>
         </a>
         <a href="#" class="header-action">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
@@ -2389,18 +2389,26 @@ document.addEventListener('click', e => {
   }
 
   wishlistBtn.setAttribute('aria-pressed', 'false');
+  const headerBadge = document.querySelector('[data-wishlist-badge]');
+  const updateHeaderBadge = (delta) => {
+    if (!headerBadge) return;
+    const current = parseInt(headerBadge.textContent, 10) || 0;
+    headerBadge.textContent = String(Math.max(0, current + delta));
+  };
   wishlistBtn.addEventListener('click', () => {
     const wasActive = wishlistBtn.classList.contains('active');
     if (wasActive) {
       wishlistBtn.classList.remove('active');
       wishlistBtn.setAttribute('aria-pressed', 'false');
       wishlistBtn.setAttribute('aria-label', 'Auf Wunschliste');
+      updateHeaderBadge(-1);
       hideToast();
       return;
     }
     wishlistBtn.classList.add('active');
     wishlistBtn.setAttribute('aria-pressed', 'true');
     wishlistBtn.setAttribute('aria-label', 'Von Wunschliste entfernen');
+    updateHeaderBadge(+1);
     // Re-trigger animations
     wishlistBtn.classList.remove('bounce', 'pulse');
     void wishlistBtn.offsetWidth;
