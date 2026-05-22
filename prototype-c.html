@@ -2321,17 +2321,17 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') overlay.classList.remove('active');
 });
 
-// Delivery date follows the 17:00 Berlin cutoff. Before 17:00:
-// next day. After 17:00: day after next.
+// Delivery date follows the 17:00 Berlin cutoff and skips
+// Sundays. Before 17:00: next day. From 17:00 onwards: day
+// after next. Either way, if the candidate lands on a
+// Sunday it advances to Monday (delivery runs Mon-Sat).
 function renderDeliveryDate() {
   const el = document.querySelector('[data-delivery-date]');
   if (!el) return;
-  // "now" rebased into Berlin wall-clock so getHours()/getDate() are
-  // Berlin values regardless of where the page renders.
   const berlinNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Berlin' }));
-  const daysAhead = berlinNow.getHours() < 17 ? 1 : 2;
   const target = new Date(berlinNow);
-  target.setDate(target.getDate() + daysAhead);
+  target.setDate(target.getDate() + (berlinNow.getHours() < 17 ? 1 : 2));
+  while (target.getDay() === 0) target.setDate(target.getDate() + 1);
   const weekdays = ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.'];
   const months = ['Jan.', 'Feb.', 'Mär.', 'Apr.', 'Mai', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Okt.', 'Nov.', 'Dez.'];
   el.textContent = weekdays[target.getDay()] + ', ' + target.getDate() + '. ' + months[target.getMonth()];
