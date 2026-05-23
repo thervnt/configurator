@@ -1393,12 +1393,34 @@ button { font: inherit; cursor: pointer; }
   flex-shrink: 0;
 }
 .serie-block .serie-card:hover .serie-card-link { color: var(--c-blue); }
-.serie-block .compare-tabs { margin-bottom: 8px; gap: 4px; }
-.serie-block .compare-tab { padding: 5px 8px; }
-.serie-block .compare-tab[aria-selected="true"] { padding: 4px 7px; }
+/* Vertical layout: tabs on the left, comparison card on the right. */
+.serie-block .compare-wrap {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 12px;
+  align-items: stretch;
+}
+.serie-block .compare-tabs {
+  flex-direction: column;
+  margin-bottom: 0;
+  gap: 4px;
+  overflow-x: visible;
+  scroll-snap-type: none;
+}
+.serie-block .compare-tab {
+  flex: none;
+  text-align: left;
+  align-items: flex-start;
+  padding: 6px 10px;
+}
+.serie-block .compare-tab[aria-selected="true"] { padding: 5px 9px; }
 .serie-block .compare-tab-name { font-size: 12px; }
 .serie-block .compare-tab-sub { font-size: 10px; }
-.serie-block .compare-card { padding: 10px 12px; }
+.serie-block .compare-card {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+}
 .serie-block .compare-card-header { margin-bottom: 8px; gap: 8px; }
 .serie-block .compare-card-icon { width: 28px; height: 28px; }
 .serie-block .compare-card-icon svg { width: 16px; height: 16px; }
@@ -1416,7 +1438,8 @@ button { font: inherit; cursor: pointer; }
 .serie-block .compare-link-row {
   display: flex;
   justify-content: flex-end;
-  margin-top: 10px;
+  margin-top: auto;  /* stick to bottom of the (flex column) card */
+  padding-top: 10px;
 }
 .serie-block .compare-link {
   display: inline-flex;
@@ -1779,8 +1802,10 @@ button { font: inherit; cursor: pointer; }
       <p class="eyebrow">Passt die 221 zu Ihrem Einsatz?</p>
       <h2>Alternative Serien im Vergleich</h2>
       <p class="serie-section-desc">Wählen Sie eine Serie, um die wichtigsten Unterschiede zu sehen.</p>
-      <div class="compare-tabs" role="tablist" aria-label="WAGO Serien" data-compare-tabs></div>
-      <div class="compare-card" role="tabpanel" id="compare-panel" data-compare-panel></div>
+      <div class="compare-wrap">
+        <div class="compare-tabs" role="tablist" aria-label="WAGO Serien" data-compare-tabs></div>
+        <div class="compare-card" role="tabpanel" id="compare-panel" data-compare-panel></div>
+      </div>
     </div>
   </section>
 </div>
