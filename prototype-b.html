@@ -2045,8 +2045,10 @@ function applySoldOutState(soldOut) {
 
 
 // User's last purchase from this account (for the "Zuletzt gekauft"
-// badge on the matching polzahl tile).
-const LAST_BOUGHT_SKU = '221-413';
+// badge on the matching polzahl tile + remembering the pack size
+// the user bought, so the price on that tile reflects their
+// previous choice instead of the Bestseller default).
+const LAST_BOUGHT = { sku: '221-413', packSize: 50 };
 function combosFor(filterFn) {
   return Object.keys(matrix).filter(k => matrix[k] && filterFn(k.split('|')));
 }
@@ -2528,18 +2530,24 @@ function renderPrototype() {
       ? true  // step 1, always show
       : combosFor(parts => Number(parts[0]) === opt.id && parts[1] === s && parts[2] === h).length > 0;
     const tState = tileStateFor(isCompat, isSel);
-    // Pricing rule: the SELECTED polzahl tile mirrors the
-    // currently chosen pack in the buy box (so its per-piece
-    // matches the buy box exactly). UNSELECTED tiles always
-    // show their own catalog default Set - a stable reference
-    // price that doesn't change when the user toggles other
-    // polzahls or pack sizes.
+    // Pricing rule:
+    // - SELECTED polzahl tile mirrors the currently chosen pack
+    //   in the buy box (so its per-piece matches the buy box).
+    // - UNSELECTED last-bought tile shows the pack the user
+    //   bought last time (LAST_BOUGHT.packSize).
+    // - Other UNSELECTED tiles show their catalog default Set -
+    //   a stable reference that doesn't shift around when the
+    //   user toggles other polzahls or pack sizes.
+    const _tileSku = skuByCombo[opt.id + '|' + s + '|' + h];
+    const _isLastBoughtTile = _tileSku === LAST_BOUGHT.sku;
     let _tilePack;
     if (isSel) {
       const _tileSizes = packSizesByPolzahl[opt.id] || [];
       _tilePack = _tileSizes.indexOf(state.packSize) !== -1
         ? state.packSize
         : (defaultPackByPolzahl[opt.id] || _tileSizes[0] || 1);
+    } else if (_isLastBoughtTile) {
+      _tilePack = LAST_BOUGHT.packSize;
     } else {
       _tilePack = defaultPackByPolzahl[opt.id] || 1;
     }
@@ -2547,10 +2555,7 @@ function renderPrototype() {
       ? safePricing.packs[_tilePack]
       : safePricing.price;
     const _tileUnit = _tilePack > 0 ? _tilePackPrice / _tilePack : safePricing.unitPrice;
-    // Last-bought badge: shows on the polzahl tile whose current
-    // (polzahl, stil, hebel) SKU matches the user's last order.
-    const _tileSku = skuByCombo[opt.id + '|' + s + '|' + h];
-    const _lastBoughtBadge = (_tileSku === LAST_BOUGHT_SKU)
+    const _lastBoughtBadge = _isLastBoughtTile
       ? '<span class="vtile-history"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Zuletzt gekauft</span>'
       : '';
     const secondary =
@@ -2674,8 +2679,17 @@ function attachInteractions() {
 
 function autoSelectBestseller() {
   const sizes = packSizesByPolzahl[state.polzahl] || [];
-  if (sizes.indexOf(25) !== -1) state.packSize = 25;
-  else state.packSize = defaultPackByPolzahl[state.polzahl] || sizes[0] || 1;
+  // If the current combo is the user's last purchase AND that
+  // pack size is still available for this polzahl, prefer the
+  // last-bought pack over the Bestseller default.
+  const sku = skuByCombo[state.polzahl + '|' + state.stil + '|' + state.hebel];
+  if (typeof LAST_BOUGHT !== 'undefined' && sku === LAST_BOUGHT.sku && sizes.indexOf(LAST_BOUGHT.packSize) !== -1) {
+    state.packSize = LAST_BOUGHT.packSize;
+  } else if (sizes.indexOf(25) !== -1) {
+    state.packSize = 25;
+  } else {
+    state.packSize = defaultPackByPolzahl[state.polzahl] || sizes[0] || 1;
+  }
 }
 
 function render() {
