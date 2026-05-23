@@ -1352,6 +1352,56 @@ button { font: inherit; cursor: pointer; }
   .compare-tabs { flex-wrap: nowrap; }
 }
 
+/* Beschreibung body copy */
+.tab-content .lead {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--c-text);
+  font-weight: 500;
+  margin: 0 0 12px;
+}
+.tab-content > p { margin: 0 0 12px; line-height: 1.6; }
+.tab-content h3 { margin: 24px 0 8px; font-size: 16px; font-weight: 600; color: var(--c-text); }
+.tab-content ul { margin: 0; padding-left: 22px; }
+.tab-content ul li { margin-bottom: 6px; line-height: 1.5; }
+
+/* FAQ accordion */
+.faq-item {
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  background: var(--c-bg-white);
+  overflow: hidden;
+}
+.faq-item summary {
+  padding: 14px 18px;
+  cursor: pointer;
+  font-weight: 600;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  color: var(--c-text);
+  font-size: 14px;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after {
+  content: '+';
+  font-size: 20px;
+  color: var(--c-text-secondary);
+  font-weight: 400;
+  line-height: 1;
+}
+.faq-item[open] summary::after { content: '−'; }
+.faq-item p {
+  padding: 0 18px 14px;
+  margin: 0;
+  color: var(--c-text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
 
 /* ===== FOOTER ===== */
 .footer {
@@ -1638,7 +1688,17 @@ button { font: inherit; cursor: pointer; }
 
 </main>
 
-<!-- TECHNISCHE DATEN (inline, adjacent to configurator) -->
+<!-- TABS -->
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab active" data-tab-link="serie">Serie &amp; Zubehör</button>
+    <button class="tab" data-tab-link="beschreibung">Beschreibung</button>
+    <button class="tab" data-tab-link="zusammen">Oft zusammen gekauft</button>
+    <button class="tab" data-tab-link="faq">Häufige Fragen</button>
+  </div>
+</div>
+
+<!-- TECHNISCHE DATEN (inline, below the section nav) -->
 <div class="tab-content-wrap">
   <section class="tab-content tech-inline">
     <h2>Technische Daten</h2>
@@ -1647,17 +1707,6 @@ button { font: inherit; cursor: pointer; }
       </tbody>
     </table>
   </section>
-</div>
-
-<!-- TABS -->
-<div class="tabs-wrap">
-  <div class="tabs">
-    <button class="tab active" data-tab-link="serie">Serie &amp; Zubehör</button>
-    <button class="tab" data-tab-link="beschreibung">Beschreibung</button>
-    <button class="tab" data-tab-link="zusammen">Oft zusammen gekauft</button>
-    <button class="tab" data-tab-link="bewertungen">Kundenbewertungen</button>
-    <button class="tab" data-tab-link="faq">Häufige Fragen</button>
-  </div>
 </div>
 
 <div class="tab-content-wrap">
@@ -1678,19 +1727,57 @@ button { font: inherit; cursor: pointer; }
   </section>
   <section class="tab-content" id="section-beschreibung" data-section="beschreibung">
     <h2>Beschreibung</h2>
-    <p>Die WAGO 221 Serie verbindet ein- und feindrähtige Leiter werkzeuglos über einen Hebel - ideal für die schnelle, lösbare Verbindung in Abzweigdosen.</p>
+    <p class="lead">Die WAGO 221 Verbindungsklemme verbindet ein-, mehr- und feindrähtige Leiter werkzeuglos. Der orange Hebel öffnet und schließt die CAGE CLAMP® S-Federklemmtechnik – ein Handgriff genügt, um den Leiter sicher zu fixieren oder wieder zu lösen.</p>
+    <p>Das transparente Gehäuse macht jede Verbindung von außen kontrollierbar. Mit Abmessungen rund 40 % kleiner als die Vorgängerserie 222 spart die 221 spürbar Platz in der Abzweigdose. Erhältlich in zwei Leitungsstärken (4 mm² und 6 mm²) sowie in der nachhaltigen Green Range mit erhöhtem Recyclat-Anteil.</p>
+    <h3>Highlights</h3>
+    <ul>
+      <li>Werkzeuglose Bedienung mit orangem Hebel</li>
+      <li>Für ein-, mehr- und feindrähtige Leiter (0,14 – 6 mm²)</li>
+      <li>Bemessungsstrom bis 41 A, Bemessungsspannung 450 V</li>
+      <li>Transparentes Gehäuse für sichtbare Verbindungskontrolle</li>
+      <li>Bauform 40 % kleiner als die Vorgängerserie 222</li>
+      <li>Mehrfach lös- und wiederverwendbar</li>
+      <li>Geprüft nach ENEC, UL, EAC, KEMA-KEUR</li>
+    </ul>
   </section>
   <section class="tab-content" id="section-zusammen" data-section="zusammen">
     <h2>Oft zusammen gekauft</h2>
     <p>Empfehlungen folgen aus dem Empfehlungssystem.</p>
   </section>
-  <section class="tab-content" id="section-bewertungen" data-section="bewertungen">
-    <h2>Kundenbewertungen</h2>
-    <p>Bewertungen werden hier angezeigt.</p>
-  </section>
   <section class="tab-content" id="section-faq" data-section="faq">
     <h2>Häufige Fragen</h2>
-    <p>Antworten auf die meistgestellten Fragen werden hier angezeigt.</p>
+    <details class="faq-item">
+      <summary>Welche Leiterarten kann ich mit der WAGO 221 verbinden?</summary>
+      <p>Die 221 verbindet eindrähtige, mehrdrähtige und feindrähtige Leiter von 0,14 mm² bis 4 mm² (Standardvariante) bzw. 0,5 mm² bis 6 mm² (6 mm²-Variante). Eine Aderendhülse ist nicht erforderlich.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Wie weit muss ich den Leiter abisolieren?</summary>
+      <p>11 mm für die 4 mm²-Variante und 13 mm für die 6 mm²-Variante. Eine Abisolierhilfe ist auf vielen WAGO-Werkzeugen markiert.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Ist die Klemme wieder lösbar?</summary>
+      <p>Ja. Den orangen Hebel nach oben drücken und der Leiter lässt sich ohne Werkzeug entnehmen. Die Klemme ist mehrfach wiederverwendbar – die elektrische Leistung bleibt nach mehreren Betätigungen unverändert.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Was ist der Unterschied zur Vorgängerserie 222?</summary>
+      <p>Die 221 ist rund 40 % kleiner als die 222 und hat ein transparentes Gehäuse, das eine Sichtkontrolle der Verbindung erlaubt. Funktional und elektrisch sind beide Serien austauschbar.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Was bedeutet "Green Range"?</summary>
+      <p>Die Green Range-Varianten bestehen zu rund 90 % aus recyceltem Kunststoff. Die elektrischen Daten und Abmessungen sind identisch zur Standardvariante – nur die Materialzusammensetzung ist nachhaltiger.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Brauche ich Werkzeug für die Installation?</summary>
+      <p>Nein. Die Verbindung erfolgt rein mit dem orangen Hebel; ein Schraubendreher oder eine Crimpzange ist nicht nötig. Bei eindrähtigen Leitern reicht das Abisolieren auf die richtige Länge.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Welche Normen und Zertifizierungen erfüllt die 221?</summary>
+      <p>Geprüft und zugelassen nach ENEC, UL, EAC und KEMA-KEUR. Brennbarkeitsklasse UL 94 V2. Damit ist die Klemme international für den Einsatz in Festinstallationen geeignet.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Wie viele Leiter kann ich pro Klemmstelle anschließen?</summary>
+      <p>Pro Klemmstelle ein Leiter. Die Polzahl gibt an, wie viele Leiter die Klemme insgesamt verbindet – 2-polig bis 10-polig sind verfügbar.</p>
+    </details>
   </section>
 </div>
 
