@@ -1688,29 +1688,9 @@ button { font: inherit; cursor: pointer; }
 
 </main>
 
-<!-- TABS -->
-<div class="tabs-wrap">
-  <div class="tabs">
-    <button class="tab active" data-tab-link="serie">Serie &amp; Zubehör</button>
-    <button class="tab" data-tab-link="beschreibung">Beschreibung</button>
-    <button class="tab" data-tab-link="zusammen">Oft zusammen gekauft</button>
-    <button class="tab" data-tab-link="faq">Häufige Fragen</button>
-  </div>
-</div>
-
-<!-- TECHNISCHE DATEN (inline, below the section nav) -->
+<!-- SERIE & ZUBEHÖR (above the section nav) -->
 <div class="tab-content-wrap">
-  <section class="tab-content tech-inline">
-    <h2>Technische Daten</h2>
-    <table>
-      <tbody data-specs-table>
-      </tbody>
-    </table>
-  </section>
-</div>
-
-<div class="tab-content-wrap">
-  <section class="tab-content" id="section-serie" data-section="serie">
+  <section class="tab-content serie-block">
     <div class="serie-section">
       <h2>Weitere Produkte dieser Serie</h2>
       <p class="serie-section-desc">Passendes Zubehör und verwandte Artikel aus der 221-Familie.</p>
@@ -1725,6 +1705,19 @@ button { font: inherit; cursor: pointer; }
       <div class="compare-card" role="tabpanel" id="compare-panel" data-compare-panel></div>
     </div>
   </section>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab active" data-tab-link="beschreibung">Beschreibung</button>
+    <button class="tab" data-tab-link="tech">Technische Daten</button>
+    <button class="tab" data-tab-link="zusammen">Oft zusammen gekauft</button>
+    <button class="tab" data-tab-link="faq">Häufige Fragen</button>
+  </div>
+</div>
+
+<div class="tab-content-wrap">
   <section class="tab-content" id="section-beschreibung" data-section="beschreibung">
     <h2>Beschreibung</h2>
     <p class="lead">Die WAGO 221 Verbindungsklemme verbindet ein-, mehr- und feindrähtige Leiter werkzeuglos. Der orange Hebel öffnet und schließt die CAGE CLAMP® S-Federklemmtechnik – ein Handgriff genügt, um den Leiter sicher zu fixieren oder wieder zu lösen.</p>
@@ -1739,6 +1732,13 @@ button { font: inherit; cursor: pointer; }
       <li>Mehrfach lös- und wiederverwendbar</li>
       <li>Geprüft nach ENEC, UL, EAC, KEMA-KEUR</li>
     </ul>
+  </section>
+  <section class="tab-content" id="section-tech" data-section="tech">
+    <h2>Technische Daten</h2>
+    <table>
+      <tbody data-specs-table>
+      </tbody>
+    </table>
   </section>
   <section class="tab-content" id="section-zusammen" data-section="zusammen">
     <h2>Oft zusammen gekauft</h2>
