@@ -1405,13 +1405,18 @@ button { font: inherit; cursor: pointer; }
 .serie-block .compare-spec-value { font-size: 11px; }
 .serie-block .compare-usecase { font-size: 11px; margin-top: 8px; line-height: 1.45; }
 
-/* "Zur Serie →" as a small brand-blue button (hidden on the 221
-   "Aktuelles Produkt" tab, visible on the alternatives). */
+/* "Zur Serie →" as a small brand-blue button on the right edge of
+   the card (hidden on the 221 "Aktuelles Produkt" tab, visible on
+   the alternatives). */
+.serie-block .compare-link-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
 .serie-block .compare-link {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  margin-top: 8px;
   padding: 6px 12px;
   background: var(--c-blue);
   color: var(--c-text-on-dark);
@@ -2877,7 +2882,7 @@ document.addEventListener('click', e => {
 
   const COMPARISON_DATA = {
     '221':    { icon: 'plug', title: 'Verbindungsklemme mit Hebel', desc: 'Werkzeuglos für alle Leiterarten. Lösbar, prüfbar, mischbar.', statusLabel: 'Aktuelles Produkt', statusVariant: 'current',     specs: { leiter: 'alle Leiterarten',      querschnitt: '0,14–6 mm²',  bedienung: 'Hebel, werkzeuglos', loesbar: 'Ja' },             usecase: 'Wenn Sie unterschiedliche Leiterarten in einer Abzweigdose verbinden, später wieder lösen oder die Verbindung prüfen wollen.', href: null },
-    '2273':   { icon: 'down', title: 'Steckklemme für eindrähtige Leiter', desc: 'Kleiner als 221, ohne Hebel. Stecken statt klemmen.',  statusLabel: 'Alternative',       statusVariant: 'alternative', specs: { leiter: 'nur eindrähtig',        querschnitt: '0,5–2,5 mm²', bedienung: 'stecken',            loesbar: 'eingeschränkt' }, usecase: 'Wenn Sie nur eindrähtige NYM-Leiter verbinden und besonders wenig Platz in der Dose haben.', href: '#' },
+    '2273':   { icon: null,   title: 'Steckklemme für eindrähtige Leiter', desc: 'Kleiner als 221, ohne Hebel. Stecken statt klemmen.',  statusLabel: 'Alternative',       statusVariant: 'alternative', specs: { leiter: 'nur eindrähtig',        querschnitt: '0,5–2,5 mm²', bedienung: 'stecken',            loesbar: 'eingeschränkt' }, usecase: 'Wenn Sie nur eindrähtige NYM-Leiter verbinden und besonders wenig Platz in der Dose haben.', href: '#' },
     '224':    { icon: 'bulb', title: 'Leuchtenklemme',                       desc: 'Eindrähtig auf feindrähtig. Speziell für Leuchten und Geräte.',          statusLabel: 'Alternative', statusVariant: 'alternative', specs: { leiter: 'eindräht. + feindräht.', querschnitt: '0,5–2,5 mm²', bedienung: 'stecken',            loesbar: 'Nein' },          usecase: 'Wenn Sie eine Leuchte oder ein Gerät mit feindrähtiger Anschlussleitung an die feste Installation anschließen.', href: '#' },
     'topjob': { icon: 'rail', title: 'Reihenklemme TOPJOB® S',          desc: 'Für Tragschiene im Verteiler oder Schaltschrank.',                       statusLabel: 'Alternative', statusVariant: 'alternative', specs: { leiter: 'alle Leiterarten',       querschnitt: '0,14–16 mm²', bedienung: 'Push-in, Hebel',     loesbar: 'Ja' },             usecase: 'Wenn die Verbindung auf eine Tragschiene im Verteiler oder Schaltschrank gehört, nicht in eine Abzweigdose.', href: '#' }
   };
@@ -2961,11 +2966,14 @@ document.addEventListener('click', e => {
     const d = COMPARISON_DATA[compareActive];
     panel.setAttribute('aria-labelledby', 'compare-tab-' + compareActive);
     const linkHtml = d.href
-      ? '<a class="compare-link" href="' + d.href + '" data-compare-link aria-label="Zur ' + d.title + ' wechseln">Zur Serie →</a>'
+      ? '<div class="compare-link-row"><a class="compare-link" href="' + d.href + '" data-compare-link aria-label="Zur ' + d.title + ' wechseln">Zur Serie →</a></div>'
+      : '';
+    const iconHtml = d.icon
+      ? '<div class="compare-card-icon" aria-hidden="true">' + (ICONS[d.icon] || '') + '</div>'
       : '';
     panel.innerHTML =
       '<div class="compare-card-header">' +
-        '<div class="compare-card-icon" aria-hidden="true">' + (ICONS[d.icon] || '') + '</div>' +
+        iconHtml +
         '<div class="compare-card-titles">' +
           '<h3 class="compare-card-title">' + d.title + '</h3>' +
           '<p class="compare-card-desc">' + d.desc + '</p>' +
