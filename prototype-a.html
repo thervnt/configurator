@@ -1468,6 +1468,19 @@ button { font: inherit; cursor: pointer; }
 .tab-content ul { margin: 0; padding-left: 22px; }
 .tab-content ul li { margin-bottom: 6px; line-height: 1.5; }
 
+/* Produktsicherheit / Hersteller-Kontaktblock */
+.recht-vendor {
+  line-height: 1.6;
+  margin: 8px 0 18px;
+  color: var(--c-text);
+}
+.recht-flag-link {
+  color: var(--c-blue);
+  font-weight: 500;
+  text-decoration: none;
+}
+.recht-flag-link:hover { text-decoration: underline; }
+
 /* FAQ accordion */
 .faq-item {
   border: 1px solid var(--c-border);
@@ -1814,6 +1827,7 @@ button { font: inherit; cursor: pointer; }
 <div class="tabs-wrap">
   <div class="tabs">
     <button class="tab active" data-tab-link="beschreibung">Beschreibung</button>
+    <button class="tab" data-tab-link="recht">Produktsicherheit</button>
     <button class="tab" data-tab-link="tech">Technische Daten</button>
     <button class="tab" data-tab-link="zusammen">Oft zusammen gekauft</button>
     <button class="tab" data-tab-link="faq">Häufige Fragen</button>
@@ -1835,6 +1849,20 @@ button { font: inherit; cursor: pointer; }
       <li>Mehrfach lös- und wiederverwendbar</li>
       <li>Geprüft nach ENEC, UL, EAC, KEMA-KEUR</li>
     </ul>
+  </section>
+  <section class="tab-content" id="section-recht" data-section="recht">
+    <h2>Produktsicherheit &amp; rechtliche Hinweise</h2>
+    <h3>Hersteller bzw. verantwortliche Person für das Produkt</h3>
+    <p class="recht-vendor">
+      <strong>WAGO</strong><br>
+      WAGO GmbH &amp; Co.KG<br>
+      Hansastr. 27, Minden, 32423, Germany<br>
+      +495718870<br>
+      <a href="https://www.wago.com/" target="_blank" rel="noopener noreferrer">https://www.wago.com/</a>
+    </p>
+    <p>
+      <a class="recht-flag-link" href="https://www.conrad.de/de/about/legal/digital-services-act.html?product=1341805" target="_blank" rel="noopener noreferrer">Rechtliche Bedenken melden →</a>
+    </p>
   </section>
   <section class="tab-content" id="section-tech" data-section="tech">
     <h2>Technische Daten</h2>
