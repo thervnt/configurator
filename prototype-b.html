@@ -3159,33 +3159,60 @@ document.addEventListener('click', e => {
   }
 
   // Tab row acts as anchor navigation: click smooth-scrolls to the
-  // matching section. The active state is updated by an
-  // IntersectionObserver as the user scrolls (scrollspy).
+  // matching section. The active state is updated by a scroll-based
+  // scrollspy that picks the last section whose top has crossed
+  // below the sticky-nav bottom line.
   function setActiveTab(id) {
     document.querySelectorAll('.tab[data-tab-link]').forEach(t => {
       t.classList.toggle('active', t.dataset.tabLink === id);
     });
+  }
+  function navOffset() {
+    const nav = document.querySelector('.tabs-wrap');
+    return nav ? nav.getBoundingClientRect().height + 8 : 64;
   }
   document.querySelectorAll('.tab[data-tab-link]').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.tabLink;
       const target = document.getElementById('section-' + id);
       if (!target) return;
-      const top = target.getBoundingClientRect().top + window.scrollY - 24;
+      const top = target.getBoundingClientRect().top + window.scrollY - navOffset();
       window.scrollTo({ top, behavior: 'smooth' });
       setActiveTab(id);
     });
   });
-  if ('IntersectionObserver' in window) {
+
+  // Scrollspy. Find the last section whose top has scrolled above
+  // (nav bottom + small buffer); that's the section the user is in.
+  // Special case: when the page is scrolled to the bottom, the last
+  // section can't get its top above the trigger (page is too short),
+  // so we activate it explicitly. Throttled via rAF.
+  let _scrollRaf = null;
+  function syncActiveTab() {
+    _scrollRaf = null;
     const sections = document.querySelectorAll('.tab-content[data-section]');
-    const io = new IntersectionObserver(entries => {
-      const visible = entries
-        .filter(e => e.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (visible) setActiveTab(visible.target.dataset.section);
-    }, { rootMargin: '-30% 0px -55% 0px', threshold: [0, 0.1, 0.5, 1] });
-    sections.forEach(s => io.observe(s));
+    if (!sections.length) return;
+    const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+    if (atBottom) {
+      setActiveTab(sections[sections.length - 1].dataset.section);
+      return;
+    }
+    const trigger = navOffset() + 12;
+    let activeId = sections[0].dataset.section;
+    for (const s of sections) {
+      const rect = s.getBoundingClientRect();
+      if (rect.top - trigger <= 0) {
+        activeId = s.dataset.section;
+      } else {
+        break;
+      }
+    }
+    setActiveTab(activeId);
   }
+  window.addEventListener('scroll', () => {
+    if (_scrollRaf == null) _scrollRaf = requestAnimationFrame(syncActiveTab);
+  }, { passive: true });
+  syncActiveTab();
 
   // Render Serie & Zubehör content on load (it's always visible now).
   renderSeriesGrid();
