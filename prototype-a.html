@@ -428,6 +428,21 @@ button { font: inherit; cursor: pointer; }
   font-size: 11px;
   color: var(--c-text-tertiary);
 }
+.vtile-history {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #eef0f4;
+  color: var(--c-text-secondary);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.vtile-history svg { width: 10px; height: 10px; flex-shrink: 0; }
 .vtile-divider {
   display: block;
   height: 1px;
@@ -1670,6 +1685,10 @@ function applySoldOutState(soldOut) {
   if (notify) notify.style.display = soldOut ? '' : 'none';
 }
 
+
+// User's last purchase from this account (for the "Zuletzt gekauft"
+// badge on the matching polzahl tile).
+const LAST_BOUGHT_SKU = '221-413';
 function combosFor(filterFn) {
   return Object.keys(matrix).filter(k => matrix[k] && filterFn(k.split('|')));
 }
@@ -2165,10 +2184,17 @@ function renderPrototype() {
       ? safePricing.packs[_tilePack]
       : safePricing.price;
     const _tileUnit = _tilePack > 0 ? _tilePackPrice / _tilePack : safePricing.unitPrice;
+    // Last-bought badge: shows on the polzahl tile whose current
+    // (polzahl, stil, hebel) SKU matches the user's last order.
+    const _tileSku = skuByCombo[opt.id + '|' + s + '|' + h];
+    const _lastBoughtBadge = (_tileSku === LAST_BOUGHT_SKU)
+      ? '<span class="vtile-history"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Zuletzt gekauft</span>'
+      : '';
     const secondary =
       '<span class="vtile-divider"></span>' +
       '<span class="vtile-price">' + fmtEur(_tilePackPrice) + '</span>' +
-      '<span class="vtile-unit">' + _tileUnit.toFixed(2).replace('.', ',') + ' € / Stück</span>';
+      '<span class="vtile-unit">' + _tileUnit.toFixed(2).replace('.', ',') + ' € / Stück</span>' +
+      _lastBoughtBadge;
     return renderTile(opt.id, opt.label, secondary, isSel, tState, 'polzahl', opt.id, tileTooltip(p, s, h, 'polzahl', opt.id, tState));
   }).join('');
 
