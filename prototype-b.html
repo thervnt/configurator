@@ -1388,23 +1388,39 @@ button { font: inherit; cursor: pointer; }
   flex-shrink: 0;
 }
 .serie-block .serie-card:hover .serie-card-link { color: var(--c-blue); }
-.serie-block .compare-tabs { margin-bottom: 10px; gap: 6px; }
-.serie-block .compare-tab { padding: 6px 10px; }
-.serie-block .compare-tab[aria-selected="true"] { padding: 5px 9px; }
-.serie-block .compare-tab-name { font-size: 13px; }
+.serie-block .compare-tabs { margin-bottom: 8px; gap: 4px; }
+.serie-block .compare-tab { padding: 5px 8px; }
+.serie-block .compare-tab[aria-selected="true"] { padding: 4px 7px; }
+.serie-block .compare-tab-name { font-size: 12px; }
 .serie-block .compare-tab-sub { font-size: 10px; }
-.serie-block .compare-card { padding: 12px 14px; }
-.serie-block .compare-card-header { margin-bottom: 10px; gap: 10px; }
-.serie-block .compare-card-icon { width: 32px; height: 32px; }
-.serie-block .compare-card-icon svg { width: 18px; height: 18px; }
-.serie-block .compare-card-title { font-size: 14px; }
-.serie-block .compare-card-desc { font-size: 12px; margin-top: 2px; }
-.serie-block .compare-status { font-size: 10px; padding: 2px 8px; }
-.serie-block .compare-specs { padding: 10px 0; gap: 10px; }
-.serie-block .compare-spec-label { font-size: 10px; margin-bottom: 2px; }
-.serie-block .compare-spec-value { font-size: 12px; }
-.serie-block .compare-usecase { font-size: 12px; margin-top: 10px; line-height: 1.5; }
-.serie-block .compare-link { font-size: 12px; margin-top: 10px; }
+.serie-block .compare-card { padding: 10px 12px; }
+.serie-block .compare-card-header { margin-bottom: 8px; gap: 8px; }
+.serie-block .compare-card-icon { width: 28px; height: 28px; }
+.serie-block .compare-card-icon svg { width: 16px; height: 16px; }
+.serie-block .compare-card-title { font-size: 13px; }
+.serie-block .compare-card-desc { font-size: 11px; margin-top: 1px; line-height: 1.35; }
+.serie-block .compare-status { font-size: 10px; padding: 2px 7px; }
+.serie-block .compare-specs { padding: 8px 0; gap: 8px; }
+.serie-block .compare-spec-label { font-size: 9px; margin-bottom: 2px; }
+.serie-block .compare-spec-value { font-size: 11px; }
+.serie-block .compare-usecase { font-size: 11px; margin-top: 8px; line-height: 1.45; }
+
+/* "Zur Serie →" as a small brand-blue button (hidden on the 221
+   "Aktuelles Produkt" tab, visible on the alternatives). */
+.serie-block .compare-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 6px 12px;
+  background: var(--c-blue);
+  color: var(--c-text-on-dark);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.serie-block .compare-link:hover { background: var(--c-blue-hover); text-decoration: none; }
 
 /* Beschreibung body copy */
 .tab-content .lead {
