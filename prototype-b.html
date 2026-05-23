@@ -1221,6 +1221,134 @@ button { font: inherit; cursor: pointer; }
 .tab-content td:last-child { color: var(--c-text); font-weight: 500; }
 .tab-content tr:nth-child(even) td { background: var(--c-bg-tint); }
 
+/* === Serie & Zubehör tab content === */
+.tab-content[hidden] { display: none; }
+.serie-section { margin-bottom: 12px; }
+.serie-section-desc { color: var(--c-text-secondary); margin: 4px 0 16px; font-size: 13px; }
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 11px;
+  color: var(--c-text-tertiary);
+  margin: 0 0 4px;
+  font-weight: 600;
+}
+.serie-divider { border: none; border-top: 1px solid var(--c-border); margin: 28px 0; }
+.serie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.serie-card {
+  background: var(--c-bg-white);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  color: var(--c-text);
+  text-decoration: none;
+}
+.serie-card:hover { border-color: var(--c-blue); box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06); }
+.serie-card-icon {
+  width: 56px; height: 56px;
+  background: var(--c-bg-tint);
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--c-text-secondary);
+}
+.serie-card-icon svg { width: 32px; height: 32px; }
+.serie-card-name { font-size: 14px; font-weight: 600; margin: 0; color: var(--c-text); }
+.serie-card-desc { font-size: 12px; color: var(--c-text-secondary); margin: 0; }
+.serie-card-link { font-size: 13px; color: var(--c-blue); font-weight: 500; margin-top: auto; }
+.compare-tabs {
+  display: flex; gap: 8px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+.compare-tab {
+  flex: 1 0 auto;
+  scroll-snap-align: start;
+  background: var(--c-bg-white);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+  font: inherit;
+  color: var(--c-text);
+}
+.compare-tab[aria-selected="true"] {
+  border: 2px solid var(--c-blue);
+  padding: 9px 13px;
+  background: #eaf0fe;
+}
+.compare-tab-name { font-size: 14px; font-weight: 600; }
+.compare-tab-sub { font-size: 11px; color: var(--c-text-tertiary); }
+.compare-tab[aria-selected="true"] .compare-tab-sub { color: var(--c-blue); }
+.compare-card {
+  background: var(--c-bg-white);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+}
+.compare-card-header {
+  display: flex; align-items: flex-start; gap: 14px;
+  margin-bottom: 16px;
+}
+.compare-card-icon {
+  width: 44px; height: 44px;
+  background: var(--c-bg-tint);
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--c-text-secondary);
+  flex-shrink: 0;
+}
+.compare-card-icon svg { width: 24px; height: 24px; }
+.compare-card-titles { flex: 1; min-width: 0; }
+.compare-card-title { font-size: 16px; font-weight: 600; margin: 0; color: var(--c-text); }
+.compare-card-desc { font-size: 13px; color: var(--c-text-secondary); margin: 4px 0 0; }
+.compare-status {
+  font-size: 11px; font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.compare-status.current { background: #eaf0fe; color: var(--c-blue); }
+.compare-status.alternative { background: var(--c-bg-tint); color: var(--c-text-secondary); }
+.compare-specs {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+  padding: 14px 0;
+  border-top: 1px solid var(--c-border);
+  border-bottom: 1px solid var(--c-border);
+}
+.compare-spec-label {
+  font-size: 11px; color: var(--c-text-secondary);
+  text-transform: uppercase; letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+.compare-spec-value { font-size: 13px; font-weight: 500; color: var(--c-text); }
+.compare-usecase { margin: 14px 0 0; font-size: 13px; color: var(--c-text); line-height: 1.55; }
+.compare-usecase strong { font-weight: 600; }
+.compare-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 14px;
+  font-size: 13px; color: var(--c-blue); font-weight: 500;
+  text-decoration: none;
+}
+.compare-link:hover { text-decoration: underline; }
+@media (max-width: 1023px) {
+  .serie-grid { grid-template-columns: repeat(2, 1fr); }
+  .compare-specs { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 767px) {
+  .serie-grid { grid-template-columns: 1fr; }
+  .compare-tabs { flex-wrap: nowrap; }
+}
+
+
 /* ===== FOOTER ===== */
 .footer {
   background: var(--c-navy);
@@ -1509,22 +1637,53 @@ button { font: inherit; cursor: pointer; }
 <!-- TABS -->
 <div class="tabs-wrap">
   <div class="tabs">
-    <div class="tab active">Technische Daten</div>
-    <div class="tab">Beschreibung</div>
-    <div class="tab">Oft zusammen gekauft</div>
-    <div class="tab">Kundenbewertungen</div>
-    <div class="tab">Häufige Fragen</div>
-    <div class="tab">Varianten</div>
+    <button class="tab active" role="tab" id="tab-tech" data-tab="tech" aria-selected="true" tabindex="0" aria-controls="panel-tech">Technische Daten</button>
+    <button class="tab" role="tab" id="tab-beschreibung" data-tab="beschreibung" aria-selected="false" tabindex="-1" aria-controls="panel-beschreibung">Beschreibung</button>
+    <button class="tab" role="tab" id="tab-zusammen" data-tab="zusammen" aria-selected="false" tabindex="-1" aria-controls="panel-zusammen">Oft zusammen gekauft</button>
+    <button class="tab" role="tab" id="tab-bewertungen" data-tab="bewertungen" aria-selected="false" tabindex="-1" aria-controls="panel-bewertungen">Kundenbewertungen</button>
+    <button class="tab" role="tab" id="tab-faq" data-tab="faq" aria-selected="false" tabindex="-1" aria-controls="panel-faq">Häufige Fragen</button>
+    <button class="tab" role="tab" id="tab-serie" data-tab="serie" aria-selected="false" tabindex="-1" aria-controls="panel-serie">Serie &amp; Zubehör</button>
   </div>
 </div>
 
 <div class="tab-content-wrap">
-  <div class="tab-content">
+  <div class="tab-content" data-panel="tech" role="tabpanel" aria-labelledby="tab-tech">
     <h2>Technische Daten</h2>
     <table>
       <tbody data-specs-table>
       </tbody>
     </table>
+  </div>
+  <div class="tab-content" data-panel="beschreibung" role="tabpanel" aria-labelledby="tab-beschreibung" hidden>
+    <h2>Beschreibung</h2>
+    <p>Die WAGO 221 Serie verbindet ein- und feindrähtige Leiter werkzeuglos über einen Hebel - ideal für die schnelle, lösbare Verbindung in Abzweigdosen.</p>
+  </div>
+  <div class="tab-content" data-panel="zusammen" role="tabpanel" aria-labelledby="tab-zusammen" hidden>
+    <h2>Oft zusammen gekauft</h2>
+    <p>Empfehlungen folgen aus dem Empfehlungssystem.</p>
+  </div>
+  <div class="tab-content" data-panel="bewertungen" role="tabpanel" aria-labelledby="tab-bewertungen" hidden>
+    <h2>Kundenbewertungen</h2>
+    <p>Bewertungen werden hier angezeigt.</p>
+  </div>
+  <div class="tab-content" data-panel="faq" role="tabpanel" aria-labelledby="tab-faq" hidden>
+    <h2>Häufige Fragen</h2>
+    <p>Antworten auf die meistgestellten Fragen werden hier angezeigt.</p>
+  </div>
+  <div class="tab-content" data-panel="serie" role="tabpanel" aria-labelledby="tab-serie" id="panel-serie" hidden>
+    <section class="serie-section">
+      <h2>Weitere Produkte dieser Serie</h2>
+      <p class="serie-section-desc">Passendes Zubehör und verwandte Artikel aus der 221-Familie.</p>
+      <div class="serie-grid" data-series-grid></div>
+    </section>
+    <hr class="serie-divider">
+    <section class="serie-section">
+      <p class="eyebrow">Passt die 221 zu Ihrem Einsatz?</p>
+      <h2>Alternative Serien im Vergleich</h2>
+      <p class="serie-section-desc">Wählen Sie eine Serie, um die wichtigsten Unterschiede zu sehen.</p>
+      <div class="compare-tabs" role="tablist" aria-label="WAGO Serien" data-compare-tabs></div>
+      <div class="compare-card" role="tabpanel" id="compare-panel" data-compare-panel></div>
+    </section>
   </div>
 </div>
 
@@ -2525,6 +2684,175 @@ document.addEventListener('click', e => {
     void wishlistBtn.offsetWidth;
     wishlistBtn.classList.add('bounce', 'pulse');
     showToast('Zur Wunschliste hinzugefügt');
+  });
+})();
+
+// === Serie & Zubehör tab (tab switching + content rendering) ===
+(function () {
+  const SERIES_PRODUCTS = [
+    { id: '221-durchgangsverbinder', name: '221 Durchgangsverbinder', descriptor: 'Inline-Verbinder für eine Leitung', href: '#', icon: 'inline' },
+    { id: '221-10-leiter',           name: '221 mit 10 Leitern',       descriptor: 'Doppelstöckig für ein Potential',                href: '#', icon: 'stack' },
+    { id: '221-bruecker',            name: '221 Brücker',              descriptor: 'Potentialverteilung auf bis zu 8 Klemmstellen',  href: '#', icon: 'bridge' },
+    { id: '221-befestigungsadapter', name: '221 Befestigungsadapter',  descriptor: 'Für Tragschienen und Schraubmontage',            href: '#', icon: 'mount' },
+    { id: 'wago-gelbox',             name: 'WAGO Gelbox',              descriptor: 'Feuchtigkeitsschutz nach IPX8',                  href: '#', icon: 'box' },
+    { id: '221-verbindungsdose',     name: '221 Verbindungsdose',      descriptor: 'Bis zu 60 Leiter geordnet anschließen',          href: '#', icon: 'circle-grid' }
+  ];
+
+  const ICONS = {
+    inline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="2" y1="12" x2="22" y2="12"/><rect x="9" y="9" width="6" height="6"/></svg>',
+    stack:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5"  width="18" height="6" rx="1"/><rect x="3" y="13" width="18" height="6" rx="1"/></svg>',
+    bridge: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="9" x2="21" y2="9"/><line x1="6" y1="9" x2="6" y2="18"/><line x1="12" y1="9" x2="12" y2="18"/><line x1="18" y1="9" x2="18" y2="18"/></svg>',
+    mount:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="6" width="16" height="3"/><line x1="6" y1="9" x2="6" y2="18"/><line x1="18" y1="9" x2="18" y2="18"/></svg>',
+    box:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l7-4 7 4v8l-7 4-7-4z"/><path d="M5 8l7 4 7-4"/></svg>',
+    'circle-grid': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="9" r="1.2" fill="currentColor"/><circle cx="15" cy="9" r="1.2" fill="currentColor"/><circle cx="9" cy="15" r="1.2" fill="currentColor"/><circle cx="15" cy="15" r="1.2" fill="currentColor"/></svg>',
+    plug:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 7V3M15 7V3M6 7h12v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V7zM12 16v5"/></svg>',
+    down:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="3" x2="12" y2="17"/><polyline points="6 11 12 17 18 11"/><line x1="6" y1="21" x2="18" y2="21"/></svg>',
+    bulb:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c0 1.3 0 1.3 0 3.3h8c0-2 0-2 0-3.3A7 7 0 0 0 12 2z"/></svg>',
+    rail:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="8" r="1"/><circle cx="12" cy="8" r="1"/><circle cx="18" cy="8" r="1"/><circle cx="6" cy="16" r="1"/><circle cx="12" cy="16" r="1"/><circle cx="18" cy="16" r="1"/></svg>'
+  };
+
+  const COMPARISON_DATA = {
+    '221':    { icon: 'plug', title: 'Verbindungsklemme mit Hebel', desc: 'Werkzeuglos für alle Leiterarten. Lösbar, prüfbar, mischbar.', statusLabel: 'Aktuelles Produkt', statusVariant: 'current',     specs: { leiter: 'alle Leiterarten',      querschnitt: '0,14–6 mm²',  bedienung: 'Hebel, werkzeuglos', loesbar: 'Ja' },             usecase: 'Wenn Sie unterschiedliche Leiterarten in einer Abzweigdose verbinden, später wieder lösen oder die Verbindung prüfen wollen.', href: null },
+    '2273':   { icon: 'down', title: 'Steckklemme für eindrähtige Leiter', desc: 'Kleiner als 221, ohne Hebel. Stecken statt klemmen.',  statusLabel: 'Alternative',       statusVariant: 'alternative', specs: { leiter: 'nur eindrähtig',        querschnitt: '0,5–2,5 mm²', bedienung: 'stecken',            loesbar: 'eingeschränkt' }, usecase: 'Wenn Sie nur eindrähtige NYM-Leiter verbinden und besonders wenig Platz in der Dose haben.', href: '#' },
+    '224':    { icon: 'bulb', title: 'Leuchtenklemme',                       desc: 'Eindrähtig auf feindrähtig. Speziell für Leuchten und Geräte.',          statusLabel: 'Alternative', statusVariant: 'alternative', specs: { leiter: 'eindräht. + feindräht.', querschnitt: '0,5–2,5 mm²', bedienung: 'stecken',            loesbar: 'Nein' },          usecase: 'Wenn Sie eine Leuchte oder ein Gerät mit feindrähtiger Anschlussleitung an die feste Installation anschließen.', href: '#' },
+    'topjob': { icon: 'rail', title: 'Reihenklemme TOPJOB® S',          desc: 'Für Tragschiene im Verteiler oder Schaltschrank.',                       statusLabel: 'Alternative', statusVariant: 'alternative', specs: { leiter: 'alle Leiterarten',       querschnitt: '0,14–16 mm²', bedienung: 'Push-in, Hebel',     loesbar: 'Ja' },             usecase: 'Wenn die Verbindung auf eine Tragschiene im Verteiler oder Schaltschrank gehört, nicht in eine Abzweigdose.', href: '#' }
+  };
+
+  const COMPARE_TAB_ORDER = [
+    { id: '221',    name: 'Serie 221',     sub: 'aktuell' },
+    { id: '2273',   name: 'Serie 2273',    sub: 'zum Stecken' },
+    { id: '224',    name: 'Serie 224',     sub: 'für Leuchten' },
+    { id: 'topjob', name: 'TOPJOB® S', sub: 'Reihenklemme' }
+  ];
+
+  let compareActive = '221';
+  let serieRendered = false;
+
+  function track(event, props) {
+    // Prototype stub - real analytics layer wires in here.
+    if (window.console) console.log('[analytics]', event, props);
+  }
+
+  function currentSku() {
+    return (typeof skuByCombo !== 'undefined' && skuByCombo[state.polzahl + '|' + state.stil + '|' + state.hebel]) || null;
+  }
+
+  function renderSeriesGrid() {
+    const grid = document.querySelector('[data-series-grid]');
+    if (!grid) return;
+    grid.innerHTML = SERIES_PRODUCTS.map((p, i) =>
+      '<a class="serie-card" href="' + p.href + '" data-series-product="' + p.id + '" data-grid-index="' + i + '">' +
+        '<div class="serie-card-icon" aria-hidden="true">' + (ICONS[p.icon] || '') + '</div>' +
+        '<h3 class="serie-card-name">' + p.name + '</h3>' +
+        '<p class="serie-card-desc">' + p.descriptor + '</p>' +
+        '<span class="serie-card-link">Ansehen →</span>' +
+      '</a>'
+    ).join('');
+    grid.querySelectorAll('[data-series-product]').forEach(card => {
+      card.addEventListener('click', e => {
+        e.preventDefault();
+        track('pdp_serie_zubehoer_product_click', {
+          productSku: currentSku(),
+          targetSku: card.dataset.seriesProduct,
+          position: Number(card.dataset.gridIndex)
+        });
+      });
+    });
+  }
+
+  function renderCompareTabs() {
+    const el = document.querySelector('[data-compare-tabs]');
+    if (!el) return;
+    el.innerHTML = COMPARE_TAB_ORDER.map(opt => {
+      const sel = opt.id === compareActive;
+      return '<button class="compare-tab" role="tab"' +
+        ' id="compare-tab-' + opt.id + '"' +
+        ' data-compare-tab="' + opt.id + '"' +
+        ' aria-selected="' + sel + '"' +
+        ' tabindex="' + (sel ? '0' : '-1') + '"' +
+        ' aria-controls="compare-panel">' +
+        '<span class="compare-tab-name">' + opt.name + '</span>' +
+        '<span class="compare-tab-sub">' + opt.sub + '</span>' +
+      '</button>';
+    }).join('');
+    el.querySelectorAll('[data-compare-tab]').forEach(btn => {
+      btn.addEventListener('click', () => selectCompareTab(btn.dataset.compareTab));
+      btn.addEventListener('keydown', e => {
+        if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+        e.preventDefault();
+        const idx = COMPARE_TAB_ORDER.findIndex(o => o.id === compareActive);
+        const dir = e.key === 'ArrowRight' ? 1 : -1;
+        const next = (idx + dir + COMPARE_TAB_ORDER.length) % COMPARE_TAB_ORDER.length;
+        selectCompareTab(COMPARE_TAB_ORDER[next].id);
+        const focusEl = el.querySelector('[data-compare-tab="' + COMPARE_TAB_ORDER[next].id + '"]');
+        if (focusEl) focusEl.focus();
+      });
+    });
+  }
+
+  function renderComparePanel() {
+    const panel = document.querySelector('[data-compare-panel]');
+    if (!panel) return;
+    const d = COMPARISON_DATA[compareActive];
+    panel.setAttribute('aria-labelledby', 'compare-tab-' + compareActive);
+    const linkHtml = d.href
+      ? '<a class="compare-link" href="' + d.href + '" data-compare-link aria-label="Zur ' + d.title + ' wechseln">Zur Serie →</a>'
+      : '';
+    panel.innerHTML =
+      '<div class="compare-card-header">' +
+        '<div class="compare-card-icon" aria-hidden="true">' + (ICONS[d.icon] || '') + '</div>' +
+        '<div class="compare-card-titles">' +
+          '<h3 class="compare-card-title">' + d.title + '</h3>' +
+          '<p class="compare-card-desc">' + d.desc + '</p>' +
+        '</div>' +
+        '<span class="compare-status ' + d.statusVariant + '">' + d.statusLabel + '</span>' +
+      '</div>' +
+      '<div class="compare-specs">' +
+        '<div class="compare-spec"><div class="compare-spec-label">Leiterart</div><div class="compare-spec-value">'    + d.specs.leiter      + '</div></div>' +
+        '<div class="compare-spec"><div class="compare-spec-label">Querschnitt</div><div class="compare-spec-value">'  + d.specs.querschnitt + '</div></div>' +
+        '<div class="compare-spec"><div class="compare-spec-label">Bedienung</div><div class="compare-spec-value">'    + d.specs.bedienung   + '</div></div>' +
+        '<div class="compare-spec"><div class="compare-spec-label">Wiederlösbar</div><div class="compare-spec-value">' + d.specs.loesbar     + '</div></div>' +
+      '</div>' +
+      '<p class="compare-usecase"><strong>Wann diese Serie?</strong> ' + d.usecase + '</p>' +
+      linkHtml;
+    const linkEl = panel.querySelector('[data-compare-link]');
+    if (linkEl) {
+      linkEl.addEventListener('click', e => {
+        e.preventDefault();
+        track('pdp_serie_zubehoer_comparison_link_click', { targetSeries: compareActive, productSku: currentSku() });
+      });
+    }
+  }
+
+  function selectCompareTab(id) {
+    if (id === compareActive) return;
+    const prev = compareActive;
+    compareActive = id;
+    renderCompareTabs();
+    renderComparePanel();
+    track('pdp_serie_zubehoer_comparison_tab_change', { from: prev, to: id, productSku: currentSku() });
+  }
+
+  function activateTab(tabId) {
+    document.querySelectorAll('.tab[data-tab]').forEach(t => {
+      const a = t.dataset.tab === tabId;
+      t.classList.toggle('active', a);
+      t.setAttribute('aria-selected', a);
+      t.setAttribute('tabindex', a ? '0' : '-1');
+    });
+    document.querySelectorAll('.tab-content[data-panel]').forEach(p => {
+      p.hidden = p.dataset.panel !== tabId;
+    });
+    if (tabId === 'serie' && !serieRendered) {
+      renderSeriesGrid();
+      renderCompareTabs();
+      renderComparePanel();
+      serieRendered = true;
+    }
+  }
+
+  document.querySelectorAll('.tab[data-tab]').forEach(btn => {
+    btn.addEventListener('click', () => activateTab(btn.dataset.tab));
   });
 })();
 
