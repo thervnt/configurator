@@ -660,6 +660,64 @@ button { font: inherit; cursor: pointer; }
 }
 .id-chip-actions button:hover { border-color: var(--c-blue); }
 .id-chip-actions svg { width: 18px; height: 18px; }
+.datenblatt-dropdown { position: relative; }
+.datenblatt-trigger {
+  background: var(--c-bg-white);
+  border: 1px solid var(--c-border);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  color: var(--c-text);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+.datenblatt-trigger::-webkit-details-marker { display: none; }
+.datenblatt-trigger:hover { border-color: var(--c-blue); }
+.datenblatt-dropdown[open] .datenblatt-trigger { border-color: var(--c-blue); }
+.datenblatt-dropdown[open] .datenblatt-caret { transform: rotate(180deg); }
+.datenblatt-caret { transition: transform 0.15s; }
+.datenblatt-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 180px;
+  background: var(--c-bg-white);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16);
+  padding: 4px;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+}
+.datenblatt-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--c-text);
+  text-decoration: none;
+}
+.datenblatt-item:hover { background: var(--c-bg-tint); text-decoration: none; }
+.datenblatt-lang {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 18px;
+  border-radius: 3px;
+  background: var(--c-bg-tint);
+  color: var(--c-text-secondary);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
 
 /* ===== RIGHT BUY BOX ===== */
 .buy-box {
@@ -1717,13 +1775,19 @@ button { font: inherit; cursor: pointer; }
       <span class="id-chip">Hst.-Teile-Nr. <button class="id-chip-value" data-copy data-hst title="In Zwischenablage kopieren">221-413-50</button></span>
       <span class="id-chip">Bestell-Nr. <button class="id-chip-value" data-copy data-bestell title="In Zwischenablage kopieren">1188440</button></span>
       <div class="id-chip-actions">
-        <button>
-          Varianten aus dieser Serie
-        </button>
-        <button>
-          Datenblatt
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.75 2.75V10.4375L12.7188 8.46875C13 8.1875 13.5 8.1875 13.7812 8.46875C14.0625 8.75 14.0625 9.25 13.7812 9.53125L10.5312 12.7812C10.25 13.0625 9.75 13.0625 9.46875 12.7812L6.21875 9.53125C5.9375 9.25 5.9375 8.78125 6.21875 8.46875C6.5 8.1875 7 8.1875 7.28125 8.46875L9.25 10.4375V2.75C9.25 2.34375 9.59375 2 10 2C10.4062 2 10.75 2.34375 10.75 2.75ZM5.0625 10.5L6.5625 12H5C4.71875 12 4.5 12.2188 4.5 12.5V15C4.5 15.2812 4.71875 15.5 5 15.5H15C15.2812 15.5 15.5 15.2812 15.5 15V12.5C15.5 12.2188 15.2812 12 15 12H13.4375L14.9375 10.5H15C16.0938 10.5 17 11.4062 17 12.5V15C17 16.0938 16.0938 17 15 17H5C3.90625 17 3 16.0938 3 15V12.5C3 11.4062 3.90625 10.5 5 10.5H5.0625ZM14.5 13.75C14.5 14.1562 14.1562 14.5 13.75 14.5C13.3438 14.5 13 14.1562 13 13.75C13 13.3438 13.3438 13 13.75 13C14.1562 13 14.5 13.3438 14.5 13.75Z" fill="#272C35"/></svg>
-        </button>
+        <details class="datenblatt-dropdown">
+          <summary class="datenblatt-trigger">
+            <svg class="datenblatt-icon" width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.75 2.75V10.4375L12.7188 8.46875C13 8.1875 13.5 8.1875 13.7812 8.46875C14.0625 8.75 14.0625 9.25 13.7812 9.53125L10.5312 12.7812C10.25 13.0625 9.75 13.0625 9.46875 12.7812L6.21875 9.53125C5.9375 9.25 5.9375 8.78125 6.21875 8.46875C6.5 8.1875 7 8.1875 7.28125 8.46875L9.25 10.4375V2.75C9.25 2.34375 9.59375 2 10 2C10.4062 2 10.75 2.34375 10.75 2.75ZM5.0625 10.5L6.5625 12H5C4.71875 12 4.5 12.2188 4.5 12.5V15C4.5 15.2812 4.71875 15.5 5 15.5H15C15.2812 15.5 15.5 15.2812 15.5 15V12.5C15.5 12.2188 15.2812 12 15 12H13.4375L14.9375 10.5H15C16.0938 10.5 17 11.4062 17 12.5V15C17 16.0938 16.0938 17 15 17H5C3.90625 17 3 16.0938 3 15V12.5C3 11.4062 3.90625 10.5 5 10.5H5.0625ZM14.5 13.75C14.5 14.1562 14.1562 14.5 13.75 14.5C13.3438 14.5 13 14.1562 13 13.75C13 13.3438 13.3438 13 13.75 13C14.1562 13 14.5 13.3438 14.5 13.75Z" fill="currentColor"/></svg>
+            Datenblatt
+            <svg class="datenblatt-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </summary>
+          <div class="datenblatt-menu" role="menu">
+            <a class="datenblatt-item" role="menuitem" href="#datenblatt-de" target="_blank" rel="noopener noreferrer" hreflang="de"><span class="datenblatt-lang">DE</span> Deutsch</a>
+            <a class="datenblatt-item" role="menuitem" href="#datenblatt-en" target="_blank" rel="noopener noreferrer" hreflang="en"><span class="datenblatt-lang">EN</span> English</a>
+            <a class="datenblatt-item" role="menuitem" href="#datenblatt-fr" target="_blank" rel="noopener noreferrer" hreflang="fr"><span class="datenblatt-lang">FR</span> Français</a>
+            <a class="datenblatt-item" role="menuitem" href="#datenblatt-it" target="_blank" rel="noopener noreferrer" hreflang="it"><span class="datenblatt-lang">IT</span> Italiano</a>
+          </div>
+        </details>
       </div>
     </div>
   </div>
@@ -3126,6 +3190,16 @@ document.addEventListener('click', e => {
   renderSeriesGrid();
   renderCompareTabs();
   renderComparePanel();
+})();
+
+// Close the Datenblatt language dropdown when the user clicks
+// anywhere else on the page.
+(function () {
+  const dd = document.querySelector('.datenblatt-dropdown');
+  if (!dd) return;
+  document.addEventListener('click', (e) => {
+    if (dd.open && !dd.contains(e.target)) dd.open = false;
+  });
 })();
 
 render();
