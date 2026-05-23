@@ -2636,9 +2636,10 @@ function renderPrototype() {
     //   in the buy box (so its per-piece matches the buy box).
     // - UNSELECTED last-bought tile shows the pack the user
     //   bought last time (LAST_BOUGHT.packSize).
-    // - Other UNSELECTED tiles show their catalog default Set -
-    //   a stable reference that doesn't shift around when the
-    //   user toggles other polzahls or pack sizes.
+    // - Other UNSELECTED tiles show their Bestseller pack -
+    //   the same pack autoSelectBestseller will land on when
+    //   the user clicks, so the price advertised on the tile
+    //   equals what the buy box flips to (no bait-and-switch).
     const _tileSku = skuByCombo[opt.id + '|' + s + '|' + h];
     const _isLastBoughtTile = _tileSku === LAST_BOUGHT.sku;
     let _tilePack;
@@ -2650,7 +2651,7 @@ function renderPrototype() {
     } else if (_isLastBoughtTile) {
       _tilePack = LAST_BOUGHT.packSize;
     } else {
-      _tilePack = defaultPackByPolzahl[opt.id] || 1;
+      _tilePack = bestsellerPackByPolzahl[opt.id] || defaultPackByPolzahl[opt.id] || 1;
     }
     const _tilePackPrice = (safePricing.packs && safePricing.packs[_tilePack] != null)
       ? safePricing.packs[_tilePack]
