@@ -1638,11 +1638,21 @@ button { font: inherit; cursor: pointer; }
 
 </main>
 
+<!-- TECHNISCHE DATEN (inline, adjacent to configurator) -->
+<div class="tab-content-wrap">
+  <section class="tab-content tech-inline">
+    <h2>Technische Daten</h2>
+    <table>
+      <tbody data-specs-table>
+      </tbody>
+    </table>
+  </section>
+</div>
+
 <!-- TABS -->
 <div class="tabs-wrap">
   <div class="tabs">
     <button class="tab active" data-tab-link="serie">Serie &amp; Zubehör</button>
-    <button class="tab" data-tab-link="tech">Technische Daten</button>
     <button class="tab" data-tab-link="beschreibung">Beschreibung</button>
     <button class="tab" data-tab-link="zusammen">Oft zusammen gekauft</button>
     <button class="tab" data-tab-link="bewertungen">Kundenbewertungen</button>
@@ -1665,13 +1675,6 @@ button { font: inherit; cursor: pointer; }
       <div class="compare-tabs" role="tablist" aria-label="WAGO Serien" data-compare-tabs></div>
       <div class="compare-card" role="tabpanel" id="compare-panel" data-compare-panel></div>
     </div>
-  </section>
-  <section class="tab-content" id="section-tech" data-section="tech">
-    <h2>Technische Daten</h2>
-    <table>
-      <tbody data-specs-table>
-      </tbody>
-    </table>
   </section>
   <section class="tab-content" id="section-beschreibung" data-section="beschreibung">
     <h2>Beschreibung</h2>
