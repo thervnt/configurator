@@ -2170,15 +2170,20 @@ function renderPrototype() {
       ? true  // step 1, always show
       : combosFor(parts => Number(parts[0]) === opt.id && parts[1] === s && parts[2] === h).length > 0;
     const tState = tileStateFor(isCompat, isSel);
-    // Show the pack-size price the user would actually land on
-    // for this polzahl. Mirrors autoSelectBestseller: keep current
-    // packSize if valid, else 25, else default Set.
-    const _tileSizes = packSizesByPolzahl[opt.id] || [];
-    let _tilePack = state.packSize;
-    if (_tileSizes.indexOf(_tilePack) === -1) {
-      _tilePack = _tileSizes.indexOf(25) !== -1
-        ? 25
+    // Pricing rule: the SELECTED polzahl tile mirrors the
+    // currently chosen pack in the buy box (so its per-piece
+    // matches the buy box exactly). UNSELECTED tiles always
+    // show their own catalog default Set - a stable reference
+    // price that doesn't change when the user toggles other
+    // polzahls or pack sizes.
+    let _tilePack;
+    if (isSel) {
+      const _tileSizes = packSizesByPolzahl[opt.id] || [];
+      _tilePack = _tileSizes.indexOf(state.packSize) !== -1
+        ? state.packSize
         : (defaultPackByPolzahl[opt.id] || _tileSizes[0] || 1);
+    } else {
+      _tilePack = defaultPackByPolzahl[opt.id] || 1;
     }
     const _tilePackPrice = (safePricing.packs && safePricing.packs[_tilePack] != null)
       ? safePricing.packs[_tilePack]
