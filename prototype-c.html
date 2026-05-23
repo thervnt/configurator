@@ -1352,6 +1352,60 @@ button { font: inherit; cursor: pointer; }
   .compare-tabs { flex-wrap: nowrap; }
 }
 
+/* Compact treatment for the Serie & Zubehör block (above the nav).
+   Same building blocks as elsewhere - just tighter spacing, smaller
+   icons and text, and a horizontal card layout. */
+.serie-block { padding: 18px 20px; }
+.serie-block h2 { font-size: 15px; margin: 0 0 2px; font-weight: 600; }
+.serie-block .serie-section-desc { font-size: 12px; margin: 0 0 10px; }
+.serie-block .eyebrow { font-size: 10px; margin: 0 0 2px; }
+.serie-block .serie-divider { margin: 16px 0; }
+.serie-block .serie-grid { gap: 8px; }
+.serie-block .serie-card {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  text-decoration: none;
+}
+.serie-block .serie-card-icon { width: 36px; height: 36px; }
+.serie-block .serie-card-icon svg { width: 20px; height: 20px; }
+.serie-block .serie-card-body { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1; }
+.serie-block .serie-card-name { font-size: 13px; font-weight: 600; line-height: 1.25; }
+.serie-block .serie-card-desc {
+  font-size: 11px;
+  color: var(--c-text-secondary);
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.serie-block .serie-card-link {
+  font-size: 14px;
+  color: var(--c-text-tertiary);
+  margin: 0;
+  flex-shrink: 0;
+}
+.serie-block .serie-card:hover .serie-card-link { color: var(--c-blue); }
+.serie-block .compare-tabs { margin-bottom: 10px; gap: 6px; }
+.serie-block .compare-tab { padding: 6px 10px; }
+.serie-block .compare-tab[aria-selected="true"] { padding: 5px 9px; }
+.serie-block .compare-tab-name { font-size: 13px; }
+.serie-block .compare-tab-sub { font-size: 10px; }
+.serie-block .compare-card { padding: 12px 14px; }
+.serie-block .compare-card-header { margin-bottom: 10px; gap: 10px; }
+.serie-block .compare-card-icon { width: 32px; height: 32px; }
+.serie-block .compare-card-icon svg { width: 18px; height: 18px; }
+.serie-block .compare-card-title { font-size: 14px; }
+.serie-block .compare-card-desc { font-size: 12px; margin-top: 2px; }
+.serie-block .compare-status { font-size: 10px; padding: 2px 8px; }
+.serie-block .compare-specs { padding: 10px 0; gap: 10px; }
+.serie-block .compare-spec-label { font-size: 10px; margin-bottom: 2px; }
+.serie-block .compare-spec-value { font-size: 12px; }
+.serie-block .compare-usecase { font-size: 12px; margin-top: 10px; line-height: 1.5; }
+.serie-block .compare-link { font-size: 12px; margin-top: 10px; }
+
 /* Beschreibung body copy */
 .tab-content .lead {
   font-size: 15px;
@@ -2836,9 +2890,11 @@ document.addEventListener('click', e => {
     grid.innerHTML = SERIES_PRODUCTS.map((p, i) =>
       '<a class="serie-card" href="' + p.href + '" data-series-product="' + p.id + '" data-grid-index="' + i + '">' +
         '<div class="serie-card-icon" aria-hidden="true">' + (ICONS[p.icon] || '') + '</div>' +
-        '<h3 class="serie-card-name">' + p.name + '</h3>' +
-        '<p class="serie-card-desc">' + p.descriptor + '</p>' +
-        '<span class="serie-card-link">Ansehen →</span>' +
+        '<div class="serie-card-body">' +
+          '<span class="serie-card-name">' + p.name + '</span>' +
+          '<span class="serie-card-desc">' + p.descriptor + '</span>' +
+        '</div>' +
+        '<span class="serie-card-link" aria-hidden="true">→</span>' +
       '</a>'
     ).join('');
     grid.querySelectorAll('[data-series-product]').forEach(card => {
