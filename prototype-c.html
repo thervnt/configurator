@@ -2222,6 +2222,11 @@ const packSizesByPolzahl = {
 // historical "1 Set" default for that polzahl, e.g. 50 for 3-pole).
 const defaultPackByPolzahl = { 2: 100, 3: 50, 5: 25, 10: 10 };
 
+// The "Bestseller" pack per polzahl. 25 Stück is the most popular
+// across the catalogue, but polzahl 2 doesn't carry a 25-pack - the
+// 50-pack stands in as the bestseller there.
+const bestsellerPackByPolzahl = { 2: 50, 3: 25, 5: 25, 10: 25 };
+
 // Backwards-compat alias used by a few price/hint helpers below.
 const unitsPerSet = defaultPackByPolzahl;
 
@@ -2349,12 +2354,16 @@ function renderProductSide() {
     }
   }
 
-  // Bestseller pill: only highlighted for the 25-Stück Set, AND only
-  // after the user has interacted with the configurator. Hide when
-  // the variant is sold out. Keeps the initial impression clean
-  // (no "Bestseller" framing on first arrival or on a sold-out item).
+  // Bestseller pill: highlighted when the chosen pack matches the
+  // bestseller for the current polzahl (25 for most, 50 for P=2),
+  // and only after the user has interacted with the configurator.
+  // Hide when the variant is sold out.
   const bestsellerPill = document.querySelector('[data-bestseller-pill]');
-  if (bestsellerPill) bestsellerPill.style.display = (state.packSize === 25 && state.interacted && !soldOut) ? 'inline-block' : 'none';
+  if (bestsellerPill) {
+    const bestsellerForP = bestsellerPackByPolzahl[p];
+    const isBestseller = bestsellerForP != null && state.packSize === bestsellerForP;
+    bestsellerPill.style.display = (isBestseller && state.interacted && !soldOut) ? 'inline-block' : 'none';
+  }
 
   // Pack-size pills
   const packRow = document.querySelector('[data-pack-row]');
@@ -2679,17 +2688,23 @@ function attachInteractions() {
 
 function autoSelectBestseller() {
   const sizes = packSizesByPolzahl[state.polzahl] || [];
-  // If the current combo is the user's last purchase AND that
-  // pack size is still available for this polzahl, prefer the
-  // last-bought pack over the Bestseller default.
+  // Priority:
+  // 1. Last-bought pack, if the current combo is the user's
+  //    previous purchase and that pack is still offered.
+  // 2. The Bestseller pack for this polzahl - per-polzahl
+  //    so polzahl 2 (no 25-pack) still has a sensible default.
+  // 3. Catalog default Set as a last resort.
   const sku = skuByCombo[state.polzahl + '|' + state.stil + '|' + state.hebel];
   if (typeof LAST_BOUGHT !== 'undefined' && sku === LAST_BOUGHT.sku && sizes.indexOf(LAST_BOUGHT.packSize) !== -1) {
     state.packSize = LAST_BOUGHT.packSize;
-  } else if (sizes.indexOf(25) !== -1) {
-    state.packSize = 25;
-  } else {
-    state.packSize = defaultPackByPolzahl[state.polzahl] || sizes[0] || 1;
+    return;
   }
+  const bestseller = bestsellerPackByPolzahl[state.polzahl];
+  if (bestseller && sizes.indexOf(bestseller) !== -1) {
+    state.packSize = bestseller;
+    return;
+  }
+  state.packSize = defaultPackByPolzahl[state.polzahl] || sizes[0] || 1;
 }
 
 function render() {
