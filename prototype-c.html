@@ -1748,9 +1748,11 @@ button { font: inherit; cursor: pointer; }
 .bundle-card-seller {
   margin: 0;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--c-text);
 }
+.bundle-card-seller a { color: var(--c-blue); text-decoration: none; }
+.bundle-card-seller a:hover { text-decoration: underline; }
 .bundle-card-prices {
   margin: auto 0 0;
   display: flex;
@@ -3597,7 +3599,7 @@ document.addEventListener('click', e => {
         '</div>' +
         '<div class="bundle-card-image"><img src="' + mainImg + '" alt="WAGO 221-415-25"></div>' +
         '<p class="bundle-card-name">WAGO 221-415-25 221 Verbindungsklemme flexibel: 0.14-4 mm² starr:…</p>' +
-        '<p class="bundle-card-seller">Conrad Electronic</p>' +
+        '<p class="bundle-card-seller">Verkauft und versendet von <a href="#" target="_blank" rel="noopener noreferrer">Conrad Electronic</a></p>' +
         '<p class="bundle-card-prices">' +
           '<span class="bundle-card-old">12,60 €</span>' +
           '<span class="bundle-card-new">11,76 €<sup>*</sup></span>' +
@@ -3610,7 +3612,7 @@ document.addEventListener('click', e => {
         '</span>' +
         '<div class="bundle-card-image"><img src="' + adapterImg + '" alt="WAGO 221-500 Befestigungsadapter"></div>' +
         '<p class="bundle-card-name">WAGO 221-500 Serie 221 Befestigungsadapter 1 St.</p>' +
-        '<p class="bundle-card-seller">Conrad Electronic</p>' +
+        '<p class="bundle-card-seller">Verkauft und versendet von <a href="#" target="_blank" rel="noopener noreferrer">Conrad Electronic</a></p>' +
         '<p class="bundle-card-prices">' +
           '<span class="bundle-card-new">0,87 €<sup>*</sup></span>' +
         '</p>' +
