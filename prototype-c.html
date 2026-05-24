@@ -853,7 +853,7 @@ button { font: inherit; cursor: pointer; }
 .discount-popover {
   position: absolute;
   top: calc(100% + 8px);
-  left: 0;
+  right: 0;
   background: var(--c-bg-white);
   color: var(--c-text);
   border: 1px solid var(--c-border);
@@ -2659,16 +2659,22 @@ function getKeySpecs(p, s, h) {
   ];
 }
 
-function buildVariantTitle(p, s, h) {
+function buildVariantTitle(p, s, h, packSize) {
   const sku = skuByCombo[p + '|' + s + '|' + h] || '221';
   const opt = polzahlOptions.find(o => o.id === p);
-  const setSize = opt ? opt.setSize : 50;
+  // Use the explicitly-selected pack size when given; fall back to
+  // the polzahl's default for places that don't track packSize yet.
+  const setSize = (packSize != null) ? packSize : (opt ? opt.setSize : 50);
+  // For the single-piece pack the SKU has no -N suffix on the
+  // catalogue side (it's the base SKU), but we still want
+  // "1 St." in the title so the user sees what they're buying.
+  const skuSuffix = setSize === 1 ? '' : ('-' + setSize);
   const isSix = s === '6';
   const range = isSix
     ? 'flexibel: 0.5-6 mm² starr: 0.5-6 mm²'
     : 'flexibel: 0.14-4 mm² starr: 0.2-4 mm²';
   const variantTag = h === 'green-range' ? ' Green Range' : '';
-  return 'WAGO ' + sku + '-' + setSize + ' 221' + variantTag + ' Verbindungsklemme ' +
+  return 'WAGO ' + sku + skuSuffix + ' 221' + variantTag + ' Verbindungsklemme ' +
          range + ' Polzahl: ' + p + ' ' + setSize + ' St. Transparent, Orange';
 }
 
@@ -2745,7 +2751,7 @@ function renderProductSide() {
   } else if (!avail) {
     nameEl.textContent = 'Kombination nicht verfügbar';
   } else {
-    nameEl.textContent = buildVariantTitle(p, s, h);
+    nameEl.textContent = buildVariantTitle(p, s, h, state.packSize);
   }
 
   // Image
@@ -3761,7 +3767,7 @@ function renderBundle() {
   const mainImg = (typeof imageBySku !== 'undefined' && imageBySku[sku]) || '';
   const skuExact = (typeof skuByCombo !== 'undefined' && skuByCombo[p+'|'+s+'|'+h]) || sku;
   const variantTitle = (typeof buildVariantTitle === 'function')
-    ? buildVariantTitle(p, s, h)
+    ? buildVariantTitle(p, s, h, sz)
     : ('WAGO ' + skuExact);
   const pricing = getPricing(p, s, h);
   const packPrice = (pricing.packs && pricing.packs[sz] != null)
