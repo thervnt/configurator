@@ -677,6 +677,13 @@ button { font: inherit; cursor: pointer; }
   position: relative;
   transition: border-color 0.15s, background 0.15s;
 }
+.id-chip-copy {
+  width: 12px;
+  height: 12px;
+  color: var(--c-text-tertiary);
+  flex-shrink: 0;
+}
+.id-chip-value:hover .id-chip-copy { color: var(--c-blue); }
 .id-chip-value:hover {
   border-color: var(--c-blue);
   background: var(--c-bg-white);
@@ -2081,9 +2088,9 @@ button { font: inherit; cursor: pointer; }
 
     <!-- ID CHIPS (spans full card width) -->
     <div class="id-chips">
-      <span class="id-chip">EAN <button class="id-chip-value" data-copy data-ean title="In Zwischenablage kopieren">4050821808442</button></span>
-      <span class="id-chip">Hst.-Teile-Nr. <button class="id-chip-value" data-copy data-hst title="In Zwischenablage kopieren">221-413-50</button></span>
-      <span class="id-chip">Bestell-Nr. <button class="id-chip-value" data-copy data-bestell title="In Zwischenablage kopieren">1188440</button></span>
+      <span class="id-chip">EAN <button class="id-chip-value" data-copy data-ean title="In Zwischenablage kopieren"><span class="id-chip-num">4050821808442</span><svg class="id-chip-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></span>
+      <span class="id-chip">Hst.-Teile-Nr. <button class="id-chip-value" data-copy data-hst title="In Zwischenablage kopieren"><span class="id-chip-num">221-413-50</span><svg class="id-chip-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></span>
+      <span class="id-chip">Bestell-Nr. <button class="id-chip-value" data-copy data-bestell title="In Zwischenablage kopieren"><span class="id-chip-num">1188440</span><svg class="id-chip-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></span>
       <div class="id-chip-actions">
         <details class="datenblatt-dropdown">
           <summary class="datenblatt-trigger">
@@ -2668,14 +2675,14 @@ function renderProductSide() {
     const skuExact = skuByCombo[p + '|' + s + '|' + h];
     const opt = polzahlOptions.find(o => o.id === p);
     const setSize = opt ? opt.setSize : 50;
-    document.querySelector('[data-hst]').textContent = skuExact + '-' + setSize;
+    (document.querySelector('[data-hst] .id-chip-num') || document.querySelector('[data-hst]')).textContent = skuExact + '-' + setSize;
     // Bestellnummer is a stable Conrad-internal id; map by SKU
     const bestellMap = {
       '221-412': '1188439', '221-413': '1188440', '221-415': '1188441', '221-420': '1188450',
       '221-2412': '2462941', '221-2413': '2462942', '221-2415': '2462943', '221-430': '2462950',
       '221-612': '1188460', '221-613': '1188461', '221-615': '1188462'
     };
-    document.querySelector('[data-bestell]').textContent = bestellMap[skuExact] || '1188440';
+    (document.querySelector('[data-bestell] .id-chip-num') || document.querySelector('[data-bestell]')).textContent = bestellMap[skuExact] || '1188440';
     // EAN (approximate, stable per SKU)
     const eanMap = {
       '221-412': '4050821808459',  '221-413': '4050821808442',  '221-415': '4050821808480',
@@ -2683,7 +2690,7 @@ function renderProductSide() {
       '221-2415': '4066966345407', '221-430': '4066966345414', '221-612': '4050821808503',
       '221-613': '4050821808510',  '221-615': '4050821808527'
     };
-    document.querySelector('[data-ean]').textContent = eanMap[skuExact] || '4050821808442';
+    (document.querySelector('[data-ean] .id-chip-num') || document.querySelector('[data-ean]')).textContent = eanMap[skuExact] || '4050821808442';
   }
 
   // Sold-out state precedes the discount story.
