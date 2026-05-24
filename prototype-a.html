@@ -58,6 +58,55 @@ a:hover { text-decoration: underline; }
 button { font: inherit; cursor: pointer; }
 
 /* ===== TOP PROMO STRIP (white text on brand blue) ===== */
+.pro-ad {
+  background: var(--c-yellow);
+  color: var(--c-text);
+  font-size: 14px;
+  padding: 10px 24px;
+  position: relative;
+}
+.pro-ad-inner {
+  max-width: 1680px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.pro-ad-msg { margin: 0; text-align: center; }
+.pro-ad-msg strong { color: var(--c-blue); font-weight: 700; }
+.pro-ad-msg sup { font-size: 70%; }
+.pro-ad-cta {
+  display: inline-flex;
+  align-items: center;
+  background: var(--c-yellow);
+  color: var(--c-text);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(0,0,0,0.15);
+}
+.pro-ad-cta:hover { background: #ffe066; text-decoration: none; }
+.pro-ad-close {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--c-text);
+  padding: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  opacity: 0.7;
+}
+.pro-ad-close:hover { opacity: 1; background: rgba(0,0,0,0.06); }
+.pro-ad-close svg { width: 16px; height: 16px; }
 .promo-strip {
   background: var(--c-blue);
   color: var(--c-text-on-dark);
@@ -1880,6 +1929,17 @@ button { font: inherit; cursor: pointer; }
 </head>
 <body>
 
+<!-- PRO PROMO AD (above the brand-claims strip) -->
+<div class="pro-ad" data-pro-ad>
+  <div class="pro-ad-inner">
+    <p class="pro-ad-msg"><strong>Pre-Access</strong> Klimawochen – bis zu 20 % Rabatt<sup>3</sup> mit Conrad <strong>PRO</strong></p>
+    <a class="pro-ad-cta" href="#" data-pro-ad-cta>Jetzt sichern</a>
+    <button class="pro-ad-close" type="button" aria-label="Anzeige schließen" data-pro-ad-close>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+</div>
+
 <!-- TOP PROMO -->
 <div class="promo-strip">
   <div class="promo-strip-inner">
@@ -3492,6 +3552,12 @@ document.addEventListener('click', e => {
   });
 })();
 
+(function () {
+  const ad = document.querySelector('[data-pro-ad]');
+  if (!ad) return;
+  const close = ad.querySelector('[data-pro-ad-close]');
+  if (close) close.addEventListener('click', () => ad.remove());
+})();
 // === "Wird oft zusammen gekauft" bundle ===
 (function () {
   const root = document.querySelector('[data-bundle]');
