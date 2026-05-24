@@ -1956,6 +1956,28 @@ button { font: inherit; cursor: pointer; }
 }
 .image-overlay-close svg { width: 20px; height: 20px; }
 .image-overlay-close:hover { background: var(--c-bg-tint); }
+.image-overlay-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  background: var(--c-bg-white);
+  border: 1px solid var(--c-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--c-text);
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  transition: background 0.15s, color 0.15s;
+}
+.image-overlay-nav:hover { background: var(--c-blue); color: var(--c-text-on-dark); border-color: var(--c-blue); }
+.image-overlay-nav svg { width: 22px; height: 22px; }
+.image-overlay-prev { left: 24px; }
+.image-overlay-next { right: 24px; }
+.image-overlay-nav[hidden] { display: none; }
 
 /* ===== FOOTER PROTOTYPE LABEL ===== */
 .footer-proto {
@@ -2334,6 +2356,12 @@ button { font: inherit; cursor: pointer; }
 <div class="image-overlay" data-overlay>
   <button class="image-overlay-close" data-overlay-close aria-label="Schließen">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <button class="image-overlay-nav image-overlay-prev" data-overlay-prev type="button" aria-label="Vorheriges Bild">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <button class="image-overlay-nav image-overlay-next" data-overlay-next type="button" aria-label="Nächstes Bild">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
   </button>
   <img data-overlay-img alt="Produktbild Großansicht">
 </div>
@@ -2938,18 +2966,15 @@ function renderProductSide() {
     }
     window.__setImageActiveIdx = setActiveIdx;
     thumbs.forEach((thumb, idx) => {
-      thumb.addEventListener('mouseenter', () => {
-        // Preview only - don't change activeIdx
-        mainEl.src = list[idx];
-      });
+      // Hover commits: main image swaps to the hovered view
+      // and stays there (no mouseleave restore). Click opens
+      // the overlay - clicking on the main image also opens.
+      thumb.addEventListener('mouseenter', () => setActiveIdx(idx));
+      thumb.addEventListener('focus',      () => setActiveIdx(idx));
       thumb.addEventListener('click', () => {
         setActiveIdx(idx);
         document.querySelector('[data-image-zoom]').click();
       });
-    });
-    wrap.addEventListener('mouseleave', () => {
-      // Restore to whatever the user last clicked (or the canonical)
-      mainEl.src = list[window.__imageActiveIdx];
     });
   })();
 
@@ -3270,9 +3295,26 @@ const overlayImg = document.querySelector('[data-overlay-img]');
 const overlayClose = document.querySelector('[data-overlay-close]');
 const imageZoom = document.querySelector('[data-image-zoom]');
 
+const overlayPrev = document.querySelector('[data-overlay-prev]');
+const overlayNext = document.querySelector('[data-overlay-next]');
+function syncOverlayNav() {
+  const multi = (window.__imageList || []).length > 1;
+  if (overlayPrev) overlayPrev.hidden = !multi;
+  if (overlayNext) overlayNext.hidden = !multi;
+}
+function stepOverlay(dir) {
+  const list = window.__imageList || [];
+  if (list.length < 2) return;
+  const cur = window.__imageActiveIdx || 0;
+  const next = (cur + dir + list.length) % list.length;
+  if (typeof window.__setImageActiveIdx === 'function') window.__setImageActiveIdx(next);
+}
+if (overlayPrev) overlayPrev.addEventListener('click', e => { e.stopPropagation(); stepOverlay(-1); });
+if (overlayNext) overlayNext.addEventListener('click', e => { e.stopPropagation(); stepOverlay(1); });
 imageZoom.addEventListener('click', () => {
   overlayImg.src = document.querySelector('[data-main-img]').src;
   overlay.classList.add('active');
+  syncOverlayNav();
 });
 overlay.addEventListener('click', e => {
   if (e.target === overlay || e.target === overlayClose || overlayClose.contains(e.target)) {
@@ -3282,14 +3324,8 @@ overlay.addEventListener('click', e => {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') overlay.classList.remove('active');
   if (!overlay.classList.contains('active')) return;
-  if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-  e.preventDefault();
-  const list = window.__imageList || [];
-  if (list.length < 2) return;
-  const cur = window.__imageActiveIdx || 0;
-  const dir = e.key === 'ArrowRight' ? 1 : -1;
-  const next = (cur + dir + list.length) % list.length;
-  if (typeof window.__setImageActiveIdx === 'function') window.__setImageActiveIdx(next);
+  if (e.key === 'ArrowRight') { e.preventDefault(); stepOverlay(1); }
+  if (e.key === 'ArrowLeft')  { e.preventDefault(); stepOverlay(-1); }
 });
 
 // Delivery date follows the 17:00 Berlin cutoff and skips
