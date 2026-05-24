@@ -2869,6 +2869,7 @@ function renderProductSide() {
     // Snap packSize to one valid for this polzahl
     if (!sizes.includes(state.packSize)) {
       state.packSize = defaultPackByPolzahl[p] || sizes[sizes.length - 1];
+      state.qty = minQtyFor(state.packSize);
     }
     packRow.innerHTML = sizes.map(sz => {
       const sel = sz === state.packSize ? ' selected' : '';
@@ -2880,6 +2881,9 @@ function renderProductSide() {
     packRow.querySelectorAll('[data-pack]').forEach(btn => {
       btn.addEventListener('click', () => {
         state.packSize = Number(btn.dataset.pack);
+        // Picking a new pack resets qty to its floor: 3 Stück for
+        // the single-piece pack (seller minimum), 1 Set otherwise.
+        state.qty = minQtyFor(state.packSize);
         // Full re-render so the polzahl tile prices stay in sync with
         // the per-piece price in the buy box.
         render();
@@ -2896,7 +2900,10 @@ function renderProductSide() {
   // 4 px from the value across "1" → "99+". field-sizing: content
   // would do this CSS-natively but isn't reliable everywhere yet.
   const qtyInput = document.querySelector('[data-qty]');
-  if (qtyInput) qtyInput.style.width = Math.max(1, String(qtyInput.value).length) + 'ch';
+  if (qtyInput) {
+    qtyInput.value = state.qty;
+    qtyInput.style.width = Math.max(1, String(qtyInput.value).length) + 'ch';
+  }
 
   // Enforce seller minimum: if the chosen pack size brings the
   // total Stück below MIN_PIECES, bump qty up to the floor.
