@@ -1766,9 +1766,8 @@ button { font: inherit; cursor: pointer; }
 .bundle-card-new {
   font-size: 16px;
   font-weight: 700;
-  color: var(--c-pink-text);
+  color: var(--c-text);
 }
-.bundle-card:not(.bundle-card-current) .bundle-card-new { color: var(--c-text); }
 .bundle-card-new sup { font-size: 60%; vertical-align: super; }
 .bundle-plus {
   display: inline-flex;
@@ -1791,22 +1790,33 @@ button { font: inherit; cursor: pointer; }
   display: flex;
   align-items: baseline;
   gap: 10px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--c-text);
-}
-.bundle-total-old {
-  font-size: 14px;
-  color: var(--c-text-tertiary);
-  text-decoration: line-through;
 }
 .bundle-total-label { color: var(--c-text); }
 .bundle-total-new {
   font-size: 22px;
   font-weight: 700;
-  color: var(--c-pink-text);
+  color: var(--c-text);
 }
 .bundle-total-new sup { font-size: 60%; vertical-align: super; }
+.bundle-total-old {
+  font-size: 13px;
+  color: var(--c-text-tertiary);
+  text-decoration: line-through;
+}
+.bundle-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.bundle-qty-note {
+  font-size: 12px;
+  color: var(--c-text-secondary);
+}
 .bundle-cta {
   background: var(--c-blue);
   color: var(--c-text-on-dark);
@@ -3608,14 +3618,17 @@ document.addEventListener('click', e => {
     '</div>' +
     '<div class="bundle-footer">' +
       '<div class="bundle-total">' +
-        '<span class="bundle-total-old">13,47 €</span>' +
         '<span class="bundle-total-label">Gesamtpreis:</span>' +
         '<span class="bundle-total-new">12,63 €<sup>*</sup></span>' +
+        '<span class="bundle-total-old">statt 13,47 €</span>' +
       '</div>' +
-      '<button class="bundle-cta" type="button">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>' +
-        '2 in den Einkaufswagen' +
-      '</button>' +
+      '<div class="bundle-actions">' +
+        '<span class="bundle-qty-note">Menge im Warenkorb anpassbar</span>' +
+        '<button class="bundle-cta" type="button">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>' +
+          '2 in den Einkaufswagen' +
+        '</button>' +
+      '</div>' +
     '</div>';
 })();
 
