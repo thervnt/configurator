@@ -89,15 +89,17 @@ button { font: inherit; cursor: pointer; }
 .pro-ad-cta {
   display: inline-flex;
   align-items: center;
-  background: var(--c-blue);
-  color: var(--c-text-on-dark);
-  font-weight: 600;
+  background: var(--c-bg-white);
+  color: var(--c-blue);
+  font-weight: 700;
   font-size: 13px;
   text-decoration: none;
-  padding: 6px 14px;
+  padding: 5px 14px;
+  border: 1.5px solid var(--c-blue);
   border-radius: var(--radius-pill);
+  transition: background 0.15s, color 0.15s;
 }
-.pro-ad-cta:hover { background: var(--c-blue-hover); text-decoration: none; }
+.pro-ad-cta:hover { background: #eaf0fe; text-decoration: none; }
 .pro-ad-close {
   position: absolute;
   top: 50%;
