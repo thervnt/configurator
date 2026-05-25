@@ -987,11 +987,43 @@ button { font: inherit; cursor: pointer; }
 
 .stock-text.is-soldout { color: #d9234c; font-weight: 600; }
 .stock-text.is-lowstock { color: #b45309; font-weight: 600; }
-.stock-restock-note {
+.stock-info-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: 6px;
+  color: currentColor;
+  cursor: help;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  vertical-align: -2px;
+  opacity: 0.85;
+}
+.stock-info-btn:hover { opacity: 1; }
+.stock-info-btn svg { width: 14px; height: 14px; }
+.stock-info-btn[data-tooltip]:hover::after,
+.stock-info-btn[data-tooltip]:focus-visible::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--c-navy);
+  color: var(--c-text-on-dark);
   font-size: 12px;
-  color: var(--c-text-secondary);
-  margin: 2px 0 10px;
+  font-weight: 400;
   line-height: 1.45;
+  padding: 8px 12px;
+  border-radius: 6px;
+  width: max-content;
+  max-width: 240px;
+  white-space: normal;
+  text-align: left;
+  z-index: 50;
+  pointer-events: none;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.18);
 }
 .cta.is-disabled {
   background: #d6d8de;
@@ -2588,10 +2620,6 @@ function isSoldOut(p, s, h) {
 
 function applyStockState(p, s, h, soldOut) {
   const stockEl = document.querySelector('.stock-text');
-  // Clear any existing restock note; we'll re-insert when needed.
-  const existingNote = document.querySelector('.stock-restock-note');
-  if (existingNote) existingNote.remove();
-
   if (stockEl) {
     stockEl.classList.remove('is-soldout', 'is-lowstock');
     if (soldOut) {
@@ -2603,11 +2631,17 @@ function applyStockState(p, s, h, soldOut) {
       const fmt = stock.toLocaleString('de-DE');
       if (stock <= LOW_STOCK_THRESHOLD) {
         stockEl.classList.add('is-lowstock');
-        stockEl.innerHTML = 'Nur noch <span data-stock>' + fmt + '</span> Stück sofort verfügbar';
-        const note = document.createElement('div');
-        note.className = 'stock-restock-note';
-        note.textContent = STOCK_RESTOCK_NOTE;
-        stockEl.parentNode.insertBefore(note, stockEl.nextSibling);
+        const infoIcon =
+          '<button type="button" class="stock-info-btn" '
+          + 'aria-label="Hinweis zur Lieferung" '
+          + 'data-tooltip="' + STOCK_RESTOCK_NOTE.replace(/"/g, '&quot;') + '">'
+          + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+          + 'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+          + '<circle cx="12" cy="12" r="10"/>'
+          + '<line x1="12" y1="16" x2="12" y2="12"/>'
+          + '<line x1="12" y1="8" x2="12.01" y2="8"/>'
+          + '</svg></button>';
+        stockEl.innerHTML = 'Nur noch <span data-stock>' + fmt + '</span> Stück sofort verfügbar' + infoIcon;
       } else {
         stockEl.innerHTML = '<span data-stock>' + fmt + '</span> Stück auf Lager';
       }
