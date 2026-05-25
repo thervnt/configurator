@@ -3644,9 +3644,10 @@ document.addEventListener('click', e => {
 
   const COMPARISON_DATA = {
     '221':    { thumb: 'k221',  title: 'Verbindungsklemme mit Hebel',           desc: 'Werkzeuglos für alle Leiterarten. Lösbar, prüfbar, mischbar.', statusLabel: 'Aktuelles Produkt', statusVariant: 'current',     specs: { leiter: 'alle Leiterarten',       querschnitt: '0,14–6 mm²',  bedienung: 'Hebel, werkzeuglos', loesbar: 'Ja' },             usecase: 'Wenn Sie unterschiedliche Leiterarten in einer Abzweigdose verbinden, später wieder lösen oder die Verbindung prüfen wollen.', href: null },
-    '2273':   { thumb: 'k2273', title: 'Steckklemme für eindrähtige Leiter',    desc: 'Kleiner als 221, ohne Hebel. Stecken statt klemmen.',          statusLabel: 'Alternative',       statusVariant: 'alternative', specs: { leiter: 'nur eindrähtig',         querschnitt: '0,5–2,5 mm²', bedienung: 'stecken',            loesbar: 'eingeschränkt' }, usecase: 'Wenn Sie nur eindrähtige NYM-Leiter verbinden und besonders wenig Platz in der Dose haben.', href: '#' },
-    '224':    { thumb: 'k224',  title: 'Leuchtenklemme',                        desc: 'Eindrähtig auf feindrähtig. Speziell für Leuchten und Geräte.', statusLabel: 'Alternative',       statusVariant: 'alternative', specs: { leiter: 'eindräht. + feindräht.', querschnitt: '0,5–2,5 mm²', bedienung: 'stecken',            loesbar: 'Nein' },          usecase: 'Wenn Sie eine Leuchte oder ein Gerät mit feindrähtiger Anschlussleitung an die feste Installation anschließen.', href: '#' },
-    'topjob': { thumb: 'ktopj', title: 'Reihenklemme TOPJOB® S',            desc: 'Für Tragschiene im Verteiler oder Schaltschrank.',             statusLabel: 'Alternative',       statusVariant: 'alternative', specs: { leiter: 'alle Leiterarten',       querschnitt: '0,14–16 mm²', bedienung: 'Push-in, Hebel',     loesbar: 'Ja' },             usecase: 'Wenn die Verbindung auf eine Tragschiene im Verteiler oder Schaltschrank gehört, nicht in eine Abzweigdose.', href: '#' }
+    '2273':   { thumb: 'k2273', title: 'Steckklemme für eindrähtige Leiter',    desc: 'Kleiner als 221, ohne Hebel. Stecken statt klemmen.',          statusLabel: 'Alternative',       statusVariant: 'alternative', specs: { leiter: 'nur eindrähtig',         querschnitt: '0,5–2,5 mm²', bedienung: 'stecken',            loesbar: 'eingeschränkt' }, usecase: 'Wenn Sie nur eindrähtige NYM-Leiter verbinden und besonders wenig Platz in der Dose haben.', href: 'https://www.conrad.de/de/search.html?search=WAGO%202273' },
+    '224':    { thumb: 'k224',  title: 'Leuchtenklemme',                        desc: 'Eindrähtig auf feindrähtig. Speziell für Leuchten und Geräte.', statusLabel: 'Alternative',       statusVariant: 'alternative', specs: { leiter: 'eindräht. + feindräht.', querschnitt: '0,5–2,5 mm²', bedienung: 'stecken',            loesbar: 'Nein' },          usecase: 'Wenn Sie eine Leuchte oder ein Gerät mit feindrähtiger Anschlussleitung an die feste Installation anschließen.', href: 'https://www.conrad.de/de/search.html?search=WAGO%20224' },
+    'topjob': { thumb: 'ktopj', title: 'Reihenklemme TOPJOB® S',            desc: 'Für Tragschiene im Verteiler oder Schaltschrank.',             statusLabel: 'Alternative',       statusVariant: 'alternative', specs: { leiter: 'alle Leiterarten',       querschnitt: '0,14–16 mm²', bedienung: 'Push-in, Hebel',     loesbar: 'Ja' },             usecase: 'Wenn die Verbindung auf eine Tragschiene im Verteiler oder Schaltschrank gehört, nicht in eine Abzweigdose.', href: 'https://www.conrad.de/de/search.html?search=WAGO%20topjob%20s' },
+    '750':    { thumb: 'k750',  title: 'I/O-System 750 für SPS', desc: 'Modulare Reihenklemmen für Steuerungen – andere Welt als die 221.', statusLabel: 'Alternative', statusVariant: 'alternative', specs: { leiter: 'feindräht. + Aderendhülse', querschnitt: '0,08–2,5 mm²', bedienung: 'Push-in', loesbar: 'Ja' }, usecase: 'Wenn Sie Sensoren und Aktoren an eine SPS anschließen, statt Leiter in einer Abzweigdose zu verbinden.', href: 'https://www.conrad.de/de/o/wago-sps-0213029.html' }
   };
 
   // Series thumbnails for the comparison segmented control. SVG
@@ -3656,14 +3657,16 @@ document.addEventListener('click', e => {
     k221:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><rect x="3" y="9" width="18" height="9" rx="1"/><rect x="5" y="5" width="3.5" height="5" rx="0.5" fill="currentColor" stroke="none"/><rect x="10.25" y="5" width="3.5" height="5" rx="0.5" fill="currentColor" stroke="none"/><rect x="15.5" y="5" width="3.5" height="5" rx="0.5" fill="currentColor" stroke="none"/></svg>',
     k2273: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="9" width="18" height="8" rx="1"/><circle cx="7" cy="13" r="1.1" fill="currentColor"/><circle cx="11" cy="13" r="1.1" fill="currentColor"/><circle cx="15" cy="13" r="1.1" fill="currentColor"/><circle cx="19" cy="13" r="1.1" fill="currentColor"/></svg>',
     k224:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="6" y="6" width="12" height="13" rx="1.5"/><rect x="8" y="6" width="8" height="3" rx="0.5" fill="currentColor" stroke="none"/><circle cx="10" cy="14" r="1.1" fill="currentColor"/><circle cx="14" cy="14" r="1.1" fill="currentColor"/></svg>',
-    ktopj: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><line x1="2" y1="8" x2="22" y2="8"/><line x1="2" y1="16" x2="22" y2="16"/><rect x="4" y="9" width="2" height="6" fill="currentColor" stroke="none"/><rect x="8" y="9" width="2" height="6" fill="currentColor" stroke="none"/><rect x="12" y="9" width="2" height="6" fill="currentColor" stroke="none"/><rect x="16" y="9" width="2" height="6" fill="currentColor" stroke="none"/></svg>'
+    ktopj: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><line x1="2" y1="8" x2="22" y2="8"/><line x1="2" y1="16" x2="22" y2="16"/><rect x="4" y="9" width="2" height="6" fill="currentColor" stroke="none"/><rect x="8" y="9" width="2" height="6" fill="currentColor" stroke="none"/><rect x="12" y="9" width="2" height="6" fill="currentColor" stroke="none"/><rect x="16" y="9" width="2" height="6" fill="currentColor" stroke="none"/></svg>',
+    k750:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="5" width="4" height="14" rx="0.5"/><rect x="8" y="5" width="4" height="14" rx="0.5"/><rect x="13" y="5" width="4" height="14" rx="0.5"/><rect x="18" y="5" width="3" height="14" rx="0.5"/></svg>'
   };
 
   const COMPARE_TAB_ORDER = [
     { id: '221',    name: 'Serie 221',     sub: 'aktuell' },
     { id: '2273',   name: 'Serie 2273',    sub: 'zum Stecken' },
     { id: '224',    name: 'Serie 224',     sub: 'für Leuchten' },
-    { id: 'topjob', name: 'TOPJOB® S', sub: 'Reihenklemme' }
+    { id: 'topjob', name: 'TOPJOB® S', sub: 'Reihenklemme' },
+    { id: '750',    name: 'Serie 750',     sub: 'I/O / SPS' }
   ];
 
   let compareActive = '221';
@@ -3744,7 +3747,7 @@ document.addEventListener('click', e => {
     const d = COMPARISON_DATA[compareActive];
     panel.setAttribute('aria-labelledby', 'compare-tab-' + compareActive);
     const linkHtml = d.href
-      ? '<div class="compare-link-row"><a class="compare-link" href="' + d.href + '" data-compare-link aria-label="Zur ' + d.title + ' wechseln">Zur Serie →</a></div>'
+      ? '<div class="compare-link-row"><a class="compare-link" href="' + d.href + '" target="_blank" rel="noopener noreferrer" data-compare-link aria-label="Zur ' + d.title + ' wechseln">Zur Serie →</a></div>'
       : '';
     const iconHtml = d.icon
       ? '<div class="compare-card-icon" aria-hidden="true">' + (ICONS[d.icon] || '') + '</div>'
@@ -3768,8 +3771,9 @@ document.addEventListener('click', e => {
       linkHtml;
     const linkEl = panel.querySelector('[data-compare-link]');
     if (linkEl) {
-      linkEl.addEventListener('click', e => {
-        e.preventDefault();
+      linkEl.addEventListener('click', () => {
+        // Fire-and-forget analytics; target=_blank keeps the
+        // current page alive so no race condition.
         track('pdp_serie_zubehoer_comparison_link_click', { targetSeries: compareActive, productSku: currentSku() });
       });
     }
