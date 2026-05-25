@@ -303,6 +303,34 @@ button { font: inherit; cursor: pointer; }
 .search-btn:hover { background: var(--c-blue-hover); }
 .search-btn svg { width: 16px; height: 16px; }
 
+/* ===== BREADCRUMB ===== */
+.breadcrumb {
+  max-width: 1680px;
+  margin: 0 auto;
+  padding: 16px 24px 0;
+  font-size: 13px;
+  color: var(--c-text-secondary);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.5;
+}
+.breadcrumb a {
+  color: var(--c-text-secondary);
+  text-decoration: none;
+}
+.breadcrumb a:hover { color: var(--c-blue); text-decoration: underline; }
+.breadcrumb-sep {
+  color: var(--c-text-tertiary);
+  font-size: 12px;
+  user-select: none;
+}
+.breadcrumb-current {
+  color: var(--c-text);
+  font-weight: 500;
+}
+
 /* ===== MAIN PDP GRID ===== */
 .pdp {
   max-width: 1680px;
@@ -2111,6 +2139,19 @@ button { font: inherit; cursor: pointer; }
     </div>
   </div>
 </header>
+
+<!-- BREADCRUMB -->
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <a href="#">Homepage</a>
+  <span class="breadcrumb-sep" aria-hidden="true">›</span>
+  <a href="#">Steckverbinder &amp; Kabel</a>
+  <span class="breadcrumb-sep" aria-hidden="true">›</span>
+  <a href="#">Steckverbinder</a>
+  <span class="breadcrumb-sep" aria-hidden="true">›</span>
+  <a href="#">Verbindungsklemmen, Einzeladerverbinder</a>
+  <span class="breadcrumb-sep" aria-hidden="true">›</span>
+  <span class="breadcrumb-current" aria-current="page">WAGO 221 Verbindungsklemme</span>
+</nav>
 
 <!-- PDP MAIN -->
 <main class="pdp">
