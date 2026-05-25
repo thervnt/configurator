@@ -4019,19 +4019,26 @@ function renderBundle() {
   const plusEl  = root.querySelector('[data-bundle-plus]');
   const cartBtn = root.querySelector('[data-bundle-cart]');
   function syncMinus() { if (minusEl) minusEl.disabled = Number(qtyEl.value) <= 1; }
+  // Grow the input to fit its content so 100 isn't clipped and
+  // "Stück" slides over to follow the value (same trick the buy-box
+  // qty input uses for browsers without field-sizing: content).
+  function syncWidth() {
+    if (!qtyEl) return;
+    qtyEl.style.width = Math.max(1, String(qtyEl.value).length) + 'ch';
+  }
   if (qtyEl) {
-    syncMinus();
+    syncMinus(); syncWidth();
     if (minusEl) minusEl.addEventListener('click', () => {
       const v = Math.max(1, Number(qtyEl.value) - 1);
-      qtyEl.value = v; syncMinus();
+      qtyEl.value = v; syncMinus(); syncWidth();
     });
     if (plusEl) plusEl.addEventListener('click', () => {
-      qtyEl.value = Number(qtyEl.value) + 1; syncMinus();
+      qtyEl.value = Number(qtyEl.value) + 1; syncMinus(); syncWidth();
     });
     qtyEl.addEventListener('input', () => {
       const n = parseInt(qtyEl.value, 10);
       qtyEl.value = (isNaN(n) || n < 1) ? 1 : n;
-      syncMinus();
+      syncMinus(); syncWidth();
     });
   }
   if (cartBtn) {
