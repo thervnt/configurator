@@ -2157,7 +2157,7 @@ button { font: inherit; cursor: pointer; }
         </a>
         <a href="#" class="header-action">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-          <span class="icon-badge">4</span>
+          <span class="icon-badge" data-cart-badge>4</span>
         </a>
         <a href="#" class="header-action">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -2330,7 +2330,7 @@ button { font: inherit; cursor: pointer; }
       <button class="wishlist-btn" aria-label="Auf Wunschliste">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       </button>
-      <button class="cta">
+      <button class="cta" data-cart-cta>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
         In den Einkaufswagen
       </button>
@@ -3570,6 +3570,24 @@ if (countdownEl) {
   setInterval(tick, 1000);
 }
 
+// Buy-box "In den Einkaufswagen" -> shared addToCart helper.
+(function () {
+  const cta = document.querySelector('[data-cart-cta]');
+  if (!cta) return;
+  cta.addEventListener('click', () => {
+    if (cta.classList.contains('is-disabled')) return;
+    const q = state.qty, sz = state.packSize;
+    let label;
+    if (sz === 1) {
+      label = q + ' Stück';
+    } else {
+      const setWord = q === 1 ? 'Set' : 'Sets';
+      label = q + ' ' + setWord + ' (' + (q * sz) + ' Stück)';
+    }
+    if (typeof window.addToCart === 'function') window.addToCart(label);
+  });
+})();
+
 // Copy-to-clipboard for EAN / Hst.-Teile-Nr. / Bestell-Nr. chips
 document.addEventListener('click', e => {
   const btn = e.target.closest('[data-copy]');
@@ -3622,6 +3640,24 @@ document.addEventListener('click', e => {
 
   // Expose to other modules (e.g. the bundle add-to-cart button).
   window.showToast = showToast;
+
+  // Header cart badge: separate from the wishlist badge above.
+  const cartBadge = document.querySelector('[data-cart-badge]');
+  function bumpCart() {
+    if (!cartBadge) return;
+    const current = parseInt(cartBadge.textContent, 10) || 0;
+    cartBadge.textContent = String(current + 1);
+    cartBadge.classList.remove('bump');
+    void cartBadge.offsetWidth;
+    cartBadge.classList.add('bump');
+  }
+  // Shared add-to-cart entry point used by the buy box and the
+  // bundle add-on. Increments the badge by 1 (per product, not
+  // per quantity) and shows a confirmation toast.
+  window.addToCart = function (qtyLabel) {
+    bumpCart();
+    showToast(qtyLabel + ' zum Einkaufswagen hinzugefügt');
+  };
 
   function showToast(message) {
     hideToast();
@@ -4044,8 +4080,9 @@ function renderBundle() {
   if (cartBtn) {
     cartBtn.addEventListener('click', () => {
       const n = qtyEl ? Number(qtyEl.value) : 1;
-      const msg = 'Befestigungsadapter (' + n + ' St\u00fcck) in den Einkaufswagen gelegt';
-      if (typeof window.showToast === 'function') window.showToast(msg);
+      // Adapter is sold as single pieces, so no "Set" framing.
+      const label = n + ' St\u00fcck';
+      if (typeof window.addToCart === 'function') window.addToCart(label);
     });
   }
 }
