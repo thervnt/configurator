@@ -997,16 +997,6 @@ button { font: inherit; cursor: pointer; }
   vertical-align: middle;
 }
 .stock-text.is-lowstock { color: #b45309; font-weight: 600; }
-.stock-text.is-lowstock::before {
-  content: '';
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #d97706;
-  margin-right: 8px;
-  vertical-align: middle;
-}
 .stock-restock-note {
   font-size: 12px;
   color: var(--c-text-secondary);
@@ -2593,7 +2583,7 @@ const stockBySku = {
   '221-430':    5900
 };
 const LOW_STOCK_THRESHOLD = 10;
-const STOCK_RESTOCK_NOTE = 'Größere Mengen liefern wir innerhalb von 5–7 Werktagen nach Bestelleingang.';
+const STOCK_RESTOCK_NOTE = 'Weitere Mengen bestellbar – wir liefern schnellstmöglich nach Bestelleingang.';
 
 // Sold-out catalog: one or more SKUs that are temporarily unavailable.
 // The combo is still listed in the matrix (so users can navigate to it),
