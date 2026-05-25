@@ -3398,13 +3398,18 @@ if (countdownEl) {
     if (secsLeft <= 0) secsLeft += 24 * 3600;  // already past 17:00, count to tomorrow
     return secsLeft;
   };
-  const pad = n => String(n).padStart(2, '0');
   const tick = () => {
     const remaining = computeRemaining();
     const h = Math.floor(remaining / 3600);
     const m = Math.floor((remaining % 3600) / 60);
-    const s = remaining % 60;
-    countdownEl.textContent = pad(h) + ':' + pad(m) + ':' + pad(s);
+    // German abbreviation: singular "Std." for exactly 1 hour,
+    // plural "Stdn." otherwise. Drop the hour part below an
+    // hour so we don't render a noisy "0 Std. 12 Min.".
+    let text;
+    if (h === 0) text = m + ' Min.';
+    else if (h === 1) text = '1 Std. ' + m + ' Min.';
+    else text = h + ' Stdn. ' + m + ' Min.';
+    countdownEl.textContent = text;
   };
   tick();
   setInterval(tick, 1000);
