@@ -2290,9 +2290,9 @@ button { font: inherit; cursor: pointer; }
 <div class="tabs-wrap">
   <div class="tabs">
     <button class="tab active" data-tab-link="beschreibung">Beschreibung</button>
-    <button class="tab" data-tab-link="recht">Produktsicherheit</button>
     <button class="tab" data-tab-link="tech">Technische Daten</button>
     <button class="tab" data-tab-link="zusammen">Oft zusammen gekauft</button>
+    <button class="tab" data-tab-link="recht">Produktsicherheit</button>
     <button class="tab" data-tab-link="faq">Häufige Fragen</button>
   </div>
 </div>
@@ -2315,6 +2315,19 @@ button { font: inherit; cursor: pointer; }
     </ul>
     </div>
   </section>
+  <section class="tab-content" id="section-tech" data-section="tech">
+    <h2>Technische Daten</h2>
+    <div class="tab-content-body">
+    <table>
+      <tbody data-specs-table>
+      </tbody>
+    </table>
+    </div>
+  </section>
+  <section class="tab-content" id="section-zusammen" data-section="zusammen">
+    <h2>Wird oft zusammen gekauft <span class="bundle-subnote">(*Alle Angaben sind zzgl. gesetzl. MwSt)</span></h2>
+    <div class="bundle" data-bundle></div>
+  </section>
   <section class="tab-content" id="section-recht" data-section="recht">
     <h2>Produktsicherheit &amp; rechtliche Hinweise</h2>
     <div class="tab-content-body">
@@ -2330,19 +2343,6 @@ button { font: inherit; cursor: pointer; }
       <a class="recht-flag-link" href="https://www.conrad.de/de/about/legal/digital-services-act.html?product=1341805" target="_blank" rel="noopener noreferrer">Rechtliche Bedenken melden →</a>
     </p>
     </div>
-  </section>
-  <section class="tab-content" id="section-tech" data-section="tech">
-    <h2>Technische Daten</h2>
-    <div class="tab-content-body">
-    <table>
-      <tbody data-specs-table>
-      </tbody>
-    </table>
-    </div>
-  </section>
-  <section class="tab-content" id="section-zusammen" data-section="zusammen">
-    <h2>Wird oft zusammen gekauft <span class="bundle-subnote">(*Alle Angaben sind zzgl. gesetzl. MwSt)</span></h2>
-    <div class="bundle" data-bundle></div>
   </section>
   <section class="tab-content" id="section-faq" data-section="faq">
     <h2>Häufige Fragen</h2>
