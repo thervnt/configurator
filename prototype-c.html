@@ -1716,6 +1716,13 @@ button { font: inherit; cursor: pointer; }
 
 /* FAQ accordion */
 /* "Wird oft zusammen gekauft" - standalone product cards */
+#section-zusammen {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  margin-top: 16px;
+}
+#section-zusammen > h2 { margin-bottom: 16px; }
 .bundle-subnote {
   font-size: 12px;
   font-weight: 400;
@@ -1723,20 +1730,25 @@ button { font: inherit; cursor: pointer; }
   margin-left: 6px;
 }
 .bundle-row {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 16px;
   margin-bottom: 18px;
 }
 .bundle-card {
   position: relative;
   background: var(--c-bg-white);
-  border: 1px solid var(--c-border);
   border-radius: var(--radius);
   padding: 18px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  flex: 0 1 282px;
+  max-width: 282px;
+  /* Same shadow as the .tab-content panels on the page */
+  box-shadow:
+    0 2px 4px -1px rgba(17, 18, 19, 0.06),
+    0 1px 2px 0 rgba(17, 18, 19, 0.08);
 }
 .bundle-card-image {
   height: 180px;
@@ -1824,10 +1836,13 @@ button { font: inherit; cursor: pointer; }
 }
 .bundle-card-actions {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
   margin-top: 10px;
 }
+.bundle-card-actions .bundle-qty { align-self: flex-start; }
+.bundle-card-actions .bundle-cart-btn { width: 100%; }
 .bundle-qty {
   display: inline-flex;
   align-items: center;
@@ -1890,7 +1905,7 @@ button { font: inherit; cursor: pointer; }
   text-align: center;
 }
 @media (max-width: 600px) {
-  .bundle-row { grid-template-columns: 1fr; }
+  .bundle-card { flex-basis: 100%; max-width: 100%; }
 }
 
 .faq-item {
@@ -3843,7 +3858,7 @@ function renderBundle() {
         '<p class="bundle-card-name">' + boldBrand(variantTitle) + '</p>' +
         '<p class="bundle-card-stock">264.150 Stück auf Lager</p>' +
         '<div class="bundle-card-delivery">' + deliveryIcon + 'Sofort-Lieferung ' + deliveryDate + '</div>' +
-        '<p class="bundle-card-seller">Verkauf und Versand: <a href="#" target="_blank" rel="noopener noreferrer">Conrad Electronic</a></p>' +
+        '<p class="bundle-card-seller">Verkauft und versendet von <a href="#" target="_blank" rel="noopener noreferrer">Conrad Electronic</a></p>' +
         '<div class="bundle-card-price-block">' +
           '<span class="bundle-card-price">' + fmtEur(packPrice) + '</span>' +
           '<p class="bundle-card-tax">zzgl. MwSt., <a href="#">zzgl. Versandkosten</a></p>' +
@@ -3856,7 +3871,7 @@ function renderBundle() {
         '<p class="bundle-card-name"><strong>WAGO</strong> 221-500 Serie 221 Befestigungsadapter 1 St.</p>' +
         '<p class="bundle-card-stock">12.500 St\u00fcck auf Lager</p>' +
         '<div class="bundle-card-delivery">' + deliveryIcon + 'Sofort-Lieferung ' + deliveryDate + '</div>' +
-        '<p class="bundle-card-seller">Verkauf und Versand: <a href="#" target="_blank" rel="noopener noreferrer">Conrad Electronic</a></p>' +
+        '<p class="bundle-card-seller">Verkauft und versendet von <a href="#" target="_blank" rel="noopener noreferrer">Conrad Electronic</a></p>' +
         '<div class="bundle-card-price-block">' +
           '<span class="bundle-card-price">' + fmtEur(adapterPrice) + '</span>' +
           '<p class="bundle-card-tax">zzgl. MwSt., <a href="#">zzgl. Versandkosten</a></p>' +
