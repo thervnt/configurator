@@ -2934,6 +2934,10 @@ function renderProductSide() {
         // Picking a new pack resets qty to its floor: 3 Stück for
         // the single-piece pack (seller minimum), 1 Set otherwise.
         state.qty = minQtyFor(state.packSize);
+        // Picking a pack is a configurator interaction - unlock the
+        // bestseller pill / discount-badge / 'Zuletzt gekauft' label
+        // story the same way polzahl/stil/hebel clicks do.
+        state.interacted = true;
         // Full re-render so the polzahl tile prices stay in sync with
         // the per-piece price in the buy box.
         render();
