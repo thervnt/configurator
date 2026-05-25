@@ -2321,7 +2321,7 @@ button { font: inherit; cursor: pointer; }
         <input type="text" value="1" data-qty>
         <span class="qty-unit" data-qty-unit>Set</span>
         <div class="qty-btn-group">
-          <button class="qty-info-btn" type="button" aria-label="Hinweise zur Bestellmenge" data-tooltip="Dieser Versender verlangt eine Mindestbestellmenge von 3 Stück. Die Anzahl wurde entsprechend angepasst.">
+          <button class="qty-info-btn" type="button" aria-label="Hinweise zur Bestellmenge" data-qty-info data-tooltip="Dieser Versender verlangt eine Mindestbestellmenge von 3 Stück. Die Anzahl wurde entsprechend angepasst.">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           </button>
           <button class="qty-btn" data-qty-minus aria-label="Menge verringern"><span class="qty-btn-puck">−</span></button>
@@ -3083,6 +3083,12 @@ function renderProductSide() {
   // pack, "Set" for any multi-piece pack.
   const qtyUnitEl = document.querySelector('[data-qty-unit]');
   if (qtyUnitEl) qtyUnitEl.textContent = state.packSize === 1 ? 'Stück' : 'Set';
+
+  // The min-order tooltip only matters when the user is buying
+  // single pieces (where the 3-Stück seller minimum kicks in).
+  // For any Set pack a single Set already clears the minimum.
+  const qtyInfoEl = document.querySelector('[data-qty-info]');
+  if (qtyInfoEl) qtyInfoEl.style.display = state.packSize === 1 ? '' : 'none';
 
   // Size the qty input to its content so the unit label tracks
   // 4 px from the value across "1" → "99+". field-sizing: content
