@@ -996,6 +996,23 @@ button { font: inherit; cursor: pointer; }
   margin-right: 8px;
   vertical-align: middle;
 }
+.stock-text.is-lowstock { color: #b45309; font-weight: 600; }
+.stock-text.is-lowstock::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d97706;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.stock-restock-note {
+  font-size: 12px;
+  color: var(--c-text-secondary);
+  margin: 2px 0 10px;
+  line-height: 1.45;
+}
 .cta.is-disabled {
   background: #d6d8de;
   color: #6e7588;
@@ -2560,6 +2577,24 @@ function getPricing(p, s, h) {
 
 function isAvailable(p, s, h) { return !!matrix[p + '|' + s + '|' + h]; }
 
+// Per-SKU stock counts. Anything missing falls back to a generic
+// well-stocked default; the sold-out SKU intentionally has no entry.
+const stockBySku = {
+  '221-412':  184500,
+  '221-2412':  28900,
+  '221-612':   12480,
+  '221-413': 264150,
+  '221-2413':  42700,
+  '221-613':    9600,
+  '221-415': 156300,
+  // '221-2415' is sold out; intentionally absent.
+  '221-615':       4,  // low-stock variant - highlight + restock note
+  '221-420':   38400,
+  '221-430':    5900
+};
+const LOW_STOCK_THRESHOLD = 10;
+const STOCK_RESTOCK_NOTE = 'Größere Mengen liefern wir innerhalb von 5–7 Werktagen nach Bestelleingang.';
+
 // Sold-out catalog: one or more SKUs that are temporarily unavailable.
 // The combo is still listed in the matrix (so users can navigate to it),
 // but the buy box flips to a sold-out state and the CTA is disabled.
@@ -2571,15 +2606,31 @@ function isSoldOut(p, s, h) {
   return !!SOLD_OUT_SKUS[sku];
 }
 
-function applySoldOutState(soldOut) {
+function applyStockState(p, s, h, soldOut) {
   const stockEl = document.querySelector('.stock-text');
+  // Clear any existing restock note; we'll re-insert when needed.
+  const existingNote = document.querySelector('.stock-restock-note');
+  if (existingNote) existingNote.remove();
+
   if (stockEl) {
+    stockEl.classList.remove('is-soldout', 'is-lowstock');
     if (soldOut) {
       stockEl.classList.add('is-soldout');
       stockEl.textContent = 'Ausverkauft';
     } else {
-      stockEl.classList.remove('is-soldout');
-      stockEl.innerHTML = '<span data-stock>264.150</span> Stück auf Lager';
+      const sku = (typeof skuByCombo !== 'undefined') ? skuByCombo[p+'|'+s+'|'+h] : null;
+      const stock = (sku && stockBySku[sku] != null) ? stockBySku[sku] : 264150;
+      const fmt = stock.toLocaleString('de-DE');
+      if (stock <= LOW_STOCK_THRESHOLD) {
+        stockEl.classList.add('is-lowstock');
+        stockEl.innerHTML = 'Nur noch <span data-stock>' + fmt + '</span> Stück sofort verfügbar';
+        const note = document.createElement('div');
+        note.className = 'stock-restock-note';
+        note.textContent = STOCK_RESTOCK_NOTE;
+        stockEl.parentNode.insertBefore(note, stockEl.nextSibling);
+      } else {
+        stockEl.innerHTML = '<span data-stock>' + fmt + '</span> Stück auf Lager';
+      }
     }
   }
   const delivery  = document.querySelector('.delivery-pill');
@@ -2877,7 +2928,7 @@ function renderProductSide() {
 
   // Sold-out state precedes the discount story.
   const soldOut = avail && isSoldOut(p, s, h);
-  applySoldOutState(soldOut);
+  applyStockState(p, s, h, soldOut);
 
   // Price - per-pack catalog price, plus list price (=baselineUnit *
   // packSize) and discount %. Pack catalog prices come straight from
