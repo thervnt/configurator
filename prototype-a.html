@@ -1856,42 +1856,17 @@ button { font: inherit; cursor: pointer; }
   gap: 8px;
   margin-top: 10px;
 }
-.bundle-card-actions .bundle-qty { align-self: flex-start; }
+.bundle-card-actions .qty-input-wrap {
+  /* Buy-box wrap is 220 px wide; on a 282 px bundle card we just
+     want it as wide as the qty + pucks need to be. */
+  flex: 0 0 auto;
+  width: auto;
+  align-self: flex-start;
+  padding-left: 12px;
+}
+.bundle-card-actions .qty-input-wrap input { min-width: 1.5ch; }
+.bundle-card-actions .qty-btn-group { margin-left: 10px; }
 .bundle-card-actions .bundle-cart-btn { width: 100%; }
-.bundle-qty {
-  display: inline-flex;
-  align-items: center;
-  background: var(--c-bg-tint);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-sm);
-  height: 44px;
-  flex-shrink: 0;
-}
-.bundle-qty-btn {
-  background: transparent;
-  border: none;
-  width: 32px;
-  height: 100%;
-  font-size: 18px;
-  line-height: 1;
-  color: var(--c-text-secondary);
-  cursor: pointer;
-  padding: 0;
-}
-.bundle-qty-btn:hover { color: var(--c-blue); }
-.bundle-qty-btn:disabled { color: var(--c-text-tertiary); cursor: not-allowed; }
-.bundle-qty-input {
-  width: 36px;
-  background: transparent;
-  border: none;
-  font: inherit;
-  font-size: 14px;
-  font-weight: 600;
-  text-align: center;
-  outline: none;
-  padding: 0;
-  color: var(--c-text);
-}
 .bundle-cart-btn {
   background: var(--c-blue);
   color: var(--c-text-on-dark);
@@ -3893,10 +3868,12 @@ function renderBundle() {
           '<p class="bundle-card-tax">zzgl. MwSt. &amp; Versand</p>' +
         '</div>' +
         '<div class="bundle-card-actions">' +
-          '<div class="bundle-qty">' +
-            '<button class="bundle-qty-btn" type="button" data-bundle-minus aria-label="Menge verringern">\u2212</button>' +
-            '<input class="bundle-qty-input" type="text" inputmode="numeric" value="1" data-bundle-qty aria-label="Menge">' +
-            '<button class="bundle-qty-btn" type="button" data-bundle-plus aria-label="Menge erh\u00f6hen">+</button>' +
+          '<div class="qty-input-wrap">' +
+            '<input type="text" inputmode="numeric" value="1" data-bundle-qty aria-label="Menge">' +
+            '<div class="qty-btn-group">' +
+              '<button class="qty-btn" type="button" data-bundle-minus aria-label="Menge verringern"><span class="qty-btn-puck">\u2212</span></button>' +
+              '<button class="qty-btn" type="button" data-bundle-plus aria-label="Menge erh\u00f6hen"><span class="qty-btn-puck">+</span></button>' +
+            '</div>' +
           '</div>' +
           '<button class="bundle-cart-btn" type="button" data-bundle-cart>' + cartIcon + 'In den Einkaufswagen</button>' +
         '</div>' +
