@@ -1488,12 +1488,15 @@ button { font: inherit; cursor: pointer; }
 }
 .tab-content-body {
   background: var(--c-bg-white);
-  padding: 20px;
+  padding: 16px 20px 20px;
   border-radius: var(--radius);
   box-shadow:
     0 2px 4px -1px rgba(17, 18, 19, 0.06),
     0 1px 2px 0 rgba(17, 18, 19, 0.08);
 }
+/* Kill any default top margin on the first child so the gap above
+   it stays at the panel's 16 px top padding on every card. */
+.tab-content-body > :first-child { margin-top: 0; }
 /* Serie & Zubehör keeps its single-panel look (two internal headings). */
 .serie-block {
   background: var(--c-bg-white);
