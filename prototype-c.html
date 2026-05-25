@@ -3609,12 +3609,11 @@ document.addEventListener('click', e => {
 // === Serie & Zubehör tab (tab switching + content rendering) ===
 (function () {
   const SERIES_PRODUCTS = [
-    { id: '221-durchgangsverbinder', name: '221 Durchgangsverbinder', descriptor: 'Inline-Verbinder für eine Leitung', href: '#', icon: 'inline' },
-    { id: '221-10-leiter',           name: '221 mit 10 Leitern',       descriptor: 'Doppelstöckig für ein Potential',                href: '#', icon: 'stack' },
-    { id: '221-bruecker',            name: '221 Brücker',              descriptor: 'Potentialverteilung auf bis zu 8 Klemmstellen',  href: '#', icon: 'bridge' },
-    { id: '221-befestigungsadapter', name: '221 Befestigungsadapter',  descriptor: 'Für Tragschienen und Schraubmontage',            href: '#', icon: 'mount' },
-    { id: 'wago-gelbox',             name: 'WAGO Gelbox',              descriptor: 'Feuchtigkeitsschutz nach IPX8',                  href: '#', icon: 'box' },
-    { id: '221-verbindungsdose',     name: '221 Verbindungsdose',      descriptor: 'Bis zu 60 Leiter geordnet anschließen',          href: '#', icon: 'circle-grid' }
+    { id: '221-durchgangsverbinder', name: '221 Durchgangsverbinder', descriptor: 'Inline-Verbinder für eine Leitung', href: 'https://www.conrad.de/de/search.html?search=WAGO%20221&tfo_productType=Durchgangsklemme', icon: 'inline' },
+    { id: '221-befestigungsadapter', name: '221 Befestigungsadapter', descriptor: 'Für Tragschienen und Schraubmontage', href: 'https://www.conrad.de/de/search.html?search=WAGO%20221&tfo_productType=Befestigungsadapter', icon: 'mount' },
+    { id: 'wago-gelbox',             name: 'WAGO Gelbox',             descriptor: 'Feuchtigkeitsschutz nach IPX8', href: 'https://www.conrad.de/de/search.html?search=WAGO%20221&tfo_productType=Gelbox%20f%C3%BCr%20Verbindungsklemmen', icon: 'box' },
+    { id: 'reihenklemme',            name: 'Reihenklemme',            descriptor: 'Tragschienenklemmen für den Schaltschrank', href: 'https://www.conrad.de/de/search.html?search=WAGO%20221&tfo_productType=Reihenklemme', icon: 'rail' },
+    { id: 'stiftleiste',             name: 'Stiftleiste',             descriptor: 'Standard-Stiftleiste zum Stecken', href: 'https://www.conrad.de/de/search.html?search=WAGO%20221&tfo_productType=Stiftleiste%20(Standard)', icon: 'plug' }
   ];
 
   const ICONS = {
@@ -3669,7 +3668,7 @@ document.addEventListener('click', e => {
     const grid = document.querySelector('[data-series-grid]');
     if (!grid) return;
     grid.innerHTML = SERIES_PRODUCTS.map((p, i) =>
-      '<a class="serie-card" href="' + p.href + '" data-series-product="' + p.id + '" data-grid-index="' + i + '">' +
+      '<a class="serie-card" href="' + p.href + '" target="_blank" rel="noopener noreferrer" data-series-product="' + p.id + '" data-grid-index="' + i + '">' +
         '<div class="serie-card-icon" aria-hidden="true">' + (ICONS[p.icon] || '') + '</div>' +
         '<div class="serie-card-body">' +
           '<span class="serie-card-name">' + p.name + '</span>' +
