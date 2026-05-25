@@ -1936,7 +1936,18 @@ button { font: inherit; cursor: pointer; }
   padding-left: 12px;
 }
 .bundle-card-actions .qty-input-wrap input { min-width: 1.5ch; }
-.bundle-card-actions .bundle-cart-btn { width: 100%; }
+.bundle-cta-row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+.bundle-cta-row .bundle-cart-btn { flex: 1; }
+.bundle-wishlist-btn {
+  width: 44px;
+  min-height: 44px;
+  flex-shrink: 0;
+}
+.bundle-wishlist-btn svg { width: 20px; height: 20px; }
 .bundle-cart-btn {
   background: var(--c-blue);
   color: var(--c-text-on-dark);
@@ -3686,37 +3697,48 @@ document.addEventListener('click', e => {
     });
   }
 
-  wishlistBtn.setAttribute('aria-pressed', 'false');
   const headerBadge = document.querySelector('[data-wishlist-badge]');
   const updateHeaderBadge = (delta) => {
     if (!headerBadge) return;
     const current = parseInt(headerBadge.textContent, 10) || 0;
     headerBadge.textContent = String(Math.max(0, current + delta));
-    // Restart the bump animation
     headerBadge.classList.remove('bump');
     void headerBadge.offsetWidth;
     headerBadge.classList.add('bump');
   };
-  wishlistBtn.addEventListener('click', () => {
-    const wasActive = wishlistBtn.classList.contains('active');
-    if (wasActive) {
-      wishlistBtn.classList.remove('active');
-      wishlistBtn.setAttribute('aria-pressed', 'false');
-      wishlistBtn.setAttribute('aria-label', 'Auf Wunschliste');
-      updateHeaderBadge(-1);
-      hideToast();
-      return;
-    }
-    wishlistBtn.classList.add('active');
-    wishlistBtn.setAttribute('aria-pressed', 'true');
-    wishlistBtn.setAttribute('aria-label', 'Von Wunschliste entfernen');
-    updateHeaderBadge(+1);
-    // Re-trigger animations
-    wishlistBtn.classList.remove('bounce', 'pulse');
-    void wishlistBtn.offsetWidth;
-    wishlistBtn.classList.add('bounce', 'pulse');
-    showToast('Zur Wunschliste hinzugefügt');
-  });
+
+  // Generic wishlist-button wiring: toggles active state, bumps
+  // the header badge, fires the bottom-left toast. Reused by the
+  // buy-box button and by the bundle adapter button (the latter
+  // is rebuilt on every renderBundle, so wireWishlistButton is
+  // exposed on window for callers to re-attach).
+  function wireWishlistButton(btn, onChange) {
+    if (!btn || btn.dataset.wishlistWired === '1') return;
+    btn.dataset.wishlistWired = '1';
+    btn.setAttribute('aria-pressed', btn.classList.contains('active') ? 'true' : 'false');
+    btn.addEventListener('click', () => {
+      const wasActive = btn.classList.contains('active');
+      if (wasActive) {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+        btn.setAttribute('aria-label', 'Auf Wunschliste');
+        updateHeaderBadge(-1);
+        hideToast();
+      } else {
+        btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
+        btn.setAttribute('aria-label', 'Von Wunschliste entfernen');
+        updateHeaderBadge(+1);
+        btn.classList.remove('bounce', 'pulse');
+        void btn.offsetWidth;
+        btn.classList.add('bounce', 'pulse');
+        showToast('Zur Wunschliste hinzugefügt');
+      }
+      if (typeof onChange === 'function') onChange(btn.classList.contains('active'));
+    });
+  }
+  wireWishlistButton(wishlistBtn);
+  window.wireWishlistButton = wireWishlistButton;
 })();
 
 // === Serie & Zubehör tab (tab switching + content rendering) ===
@@ -4044,7 +4066,12 @@ function renderBundle() {
               '<button class="qty-btn" type="button" data-bundle-plus aria-label="Menge erh\u00f6hen"><span class="qty-btn-puck">+</span></button>' +
             '</div>' +
           '</div>' +
-          '<button class="bundle-cart-btn" type="button" data-bundle-cart>' + cartIcon + 'In den Einkaufswagen</button>' +
+          '<div class="bundle-cta-row">' +
+            '<button type="button" class="wishlist-btn bundle-wishlist-btn' + (window.__bundleWishlistActive ? ' active' : '') + '" aria-label="Auf Wunschliste" data-bundle-wishlist>' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
+            '</button>' +
+            '<button class="bundle-cart-btn" type="button" data-bundle-cart>' + cartIcon + 'In den Einkaufswagen</button>' +
+          '</div>' +
         '</div>' +
       '</article>' +
     '</div>';
@@ -4080,9 +4107,17 @@ function renderBundle() {
   if (cartBtn) {
     cartBtn.addEventListener('click', () => {
       const n = qtyEl ? Number(qtyEl.value) : 1;
-      // Adapter is sold as single pieces, so no "Set" framing.
       const label = n + ' St\u00fcck';
       if (typeof window.addToCart === 'function') window.addToCart(label);
+    });
+  }
+  const bundleWish = root.querySelector('[data-bundle-wishlist]');
+  if (bundleWish && typeof window.wireWishlistButton === 'function') {
+    window.wireWishlistButton(bundleWish, active => {
+      // Persist the toggle across re-renders triggered by config
+      // changes; the bundle adapter is the same SKU regardless of
+      // which 221 variant is selected.
+      window.__bundleWishlistActive = active;
     });
   }
 }
