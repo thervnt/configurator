@@ -1857,11 +1857,11 @@ button { font: inherit; cursor: pointer; }
   margin-top: 10px;
 }
 .bundle-card-actions .qty-input-wrap {
-  /* Buy-box wrap is 220 px wide; on a 282 px bundle card we just
-     want it as wide as the qty + pucks need to be. */
+  /* Buy-box wrap declares flex: 0 0 220px; in a column-flex
+     parent that 220px becomes HEIGHT, so reset basis here. */
   flex: 0 0 auto;
-  width: auto;
-  align-self: flex-start;
+  width: 100%;
+  height: 44px;
   padding-left: 12px;
 }
 .bundle-card-actions .qty-input-wrap input { min-width: 1.5ch; }
