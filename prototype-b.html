@@ -1409,21 +1409,36 @@ button { font: inherit; cursor: pointer; }
   padding: 16px 24px 0;
 }
 .tab-content {
-  padding: 24px;
-  background: var(--c-bg-white);
-  border-radius: var(--radius);
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
   font-size: 14px;
   color: var(--c-text-secondary);
   line-height: 1.7;
+  box-shadow: none;
+}
+.tab-content > h2 {
+  font-size: 18px;
+  color: var(--c-text);
+  margin: 0 0 12px;
+  font-weight: 600;
+}
+.tab-content-body {
+  background: var(--c-bg-white);
+  padding: 20px;
+  border-radius: var(--radius);
   box-shadow:
     0 2px 4px -1px rgba(17, 18, 19, 0.06),
     0 1px 2px 0 rgba(17, 18, 19, 0.08);
 }
-.tab-content h2 {
-  font-size: 18px;
-  color: var(--c-text);
-  margin: 0 0 14px;
-  font-weight: 600;
+/* Serie & Zubehör keeps its single-panel look (two internal headings). */
+.serie-block {
+  background: var(--c-bg-white);
+  padding: 24px;
+  border-radius: var(--radius);
+  box-shadow:
+    0 2px 4px -1px rgba(17, 18, 19, 0.06),
+    0 1px 2px 0 rgba(17, 18, 19, 0.08);
 }
 .tab-content table {
   width: 100%;
@@ -1716,13 +1731,6 @@ button { font: inherit; cursor: pointer; }
 
 /* FAQ accordion */
 /* "Wird oft zusammen gekauft" - standalone product cards */
-#section-zusammen {
-  background: transparent;
-  box-shadow: none;
-  padding: 0;
-  margin-top: 16px;
-}
-#section-zusammen > h2 { margin-bottom: 16px; }
 .bundle-subnote {
   font-size: 12px;
   font-weight: 400;
@@ -2292,6 +2300,7 @@ button { font: inherit; cursor: pointer; }
 <div class="tab-content-wrap">
   <section class="tab-content" id="section-beschreibung" data-section="beschreibung">
     <h2>Beschreibung</h2>
+    <div class="tab-content-body">
     <p class="lead">Die WAGO 221 Verbindungsklemme verbindet ein-, mehr- und feindrähtige Leiter werkzeuglos. Der orange Hebel öffnet und schließt die CAGE CLAMP® S-Federklemmtechnik – ein Handgriff genügt, um den Leiter sicher zu fixieren oder wieder zu lösen.</p>
     <p>Das transparente Gehäuse macht jede Verbindung von außen kontrollierbar. Mit Abmessungen rund 40 % kleiner als die Vorgängerserie 222 spart die 221 spürbar Platz in der Abzweigdose. Erhältlich in zwei Leitungsstärken (4 mm² und 6 mm²) sowie in der nachhaltigen Green Range mit erhöhtem Recyclat-Anteil.</p>
     <h3>Highlights</h3>
@@ -2304,9 +2313,11 @@ button { font: inherit; cursor: pointer; }
       <li>Mehrfach lös- und wiederverwendbar</li>
       <li>Geprüft nach ENEC, UL, EAC, KEMA-KEUR</li>
     </ul>
+    </div>
   </section>
   <section class="tab-content" id="section-recht" data-section="recht">
     <h2>Produktsicherheit &amp; rechtliche Hinweise</h2>
+    <div class="tab-content-body">
     <h3>Hersteller bzw. verantwortliche Person für das Produkt</h3>
     <p class="recht-vendor">
       <strong>WAGO</strong><br>
@@ -2318,13 +2329,16 @@ button { font: inherit; cursor: pointer; }
     <p>
       <a class="recht-flag-link" href="https://www.conrad.de/de/about/legal/digital-services-act.html?product=1341805" target="_blank" rel="noopener noreferrer">Rechtliche Bedenken melden →</a>
     </p>
+    </div>
   </section>
   <section class="tab-content" id="section-tech" data-section="tech">
     <h2>Technische Daten</h2>
+    <div class="tab-content-body">
     <table>
       <tbody data-specs-table>
       </tbody>
     </table>
+    </div>
   </section>
   <section class="tab-content" id="section-zusammen" data-section="zusammen">
     <h2>Wird oft zusammen gekauft <span class="bundle-subnote">(*Alle Angaben sind zzgl. gesetzl. MwSt)</span></h2>
@@ -2332,6 +2346,7 @@ button { font: inherit; cursor: pointer; }
   </section>
   <section class="tab-content" id="section-faq" data-section="faq">
     <h2>Häufige Fragen</h2>
+    <div class="tab-content-body">
     <details class="faq-item">
       <summary>Welche Leiterarten kann ich mit der WAGO 221 verbinden?</summary>
       <p>Die 221 verbindet eindrähtige, mehrdrähtige und feindrähtige Leiter von 0,14 mm² bis 4 mm² (Standardvariante) bzw. 0,5 mm² bis 6 mm² (6 mm²-Variante). Eine Aderendhülse ist nicht erforderlich.</p>
@@ -2364,6 +2379,7 @@ button { font: inherit; cursor: pointer; }
       <summary>Wie viele Leiter kann ich pro Klemmstelle anschließen?</summary>
       <p>Pro Klemmstelle ein Leiter. Die Polzahl gibt an, wie viele Leiter die Klemme insgesamt verbindet – 2-polig bis 10-polig sind verfügbar.</p>
     </details>
+    </div>
   </section>
 </div>
 
