@@ -3681,8 +3681,9 @@ document.addEventListener('click', e => {
       '</a>'
     ).join('');
     grid.querySelectorAll('[data-series-product]').forEach(card => {
-      card.addEventListener('click', e => {
-        e.preventDefault();
+      card.addEventListener('click', () => {
+        // Fire-and-forget analytics; the browser still follows the
+        // href (target=_blank, so no race with the current page).
         track('pdp_serie_zubehoer_product_click', {
           productSku: currentSku(),
           targetSku: card.dataset.seriesProduct,
