@@ -1781,6 +1781,9 @@ button { font: inherit; cursor: pointer; }
   font-weight: 400;
   color: var(--c-text);
   line-height: 1.45;
+  /* Reserve 3 lines so shorter titles don't lift the stock
+     line above its sibling on the neighbour card. */
+  min-height: calc(1.45em * 3);
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -1890,12 +1893,12 @@ button { font: inherit; cursor: pointer; }
   color: var(--c-text);
 }
 .bundle-cart-btn {
-  flex: 1;
   background: var(--c-blue);
   color: var(--c-text-on-dark);
   border: none;
   padding: 0 16px;
   height: 44px;
+  min-height: 44px;
   border-radius: var(--radius-sm);
   font-size: 14px;
   font-weight: 600;
