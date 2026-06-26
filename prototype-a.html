@@ -348,6 +348,10 @@ button { font: inherit; cursor: pointer; }
 
 @media (max-width: 980px) {
   .pdp { grid-template-columns: 1fr; }
+  /* Reset buy-box grid pinning so it stacks normally in source
+     order (right under the product main) instead of jumping into
+     a phantom column 2. */
+  .pdp > .buy-box { grid-column: auto; grid-row: auto; position: static; }
 }
 
 /* ===== PRODUCT MAIN (left side) ===== */
@@ -398,6 +402,141 @@ button { font: inherit; cursor: pointer; }
   .product-main {
     grid-template-columns: 1fr;
   }
+}
+
+/* ============================================================
+   MOBILE  (≤ 767 px)
+   ============================================================ */
+@media (max-width: 767px) {
+  /* Hide the Conrad PRO promo strip to recover vertical space. */
+  .pro-ad { display: none; }
+
+  /* Brand-claims strip: hide on mobile (eats 4 rows of vertical space). */
+  .promo-strip { display: none; }
+
+  /* --- Header collapse -------------------------------------- */
+  .header { padding: 12px 0 12px; }
+  .header-inner { padding: 0 16px; }
+  .header-row1 { gap: 12px; margin-bottom: 12px; }
+  .logo svg { width: 96px; }
+  .menu-btn { font-size: 0; padding: 6px; gap: 0; }  /* hide text, keep icon */
+  .menu-btn svg { width: 22px; height: 22px; }
+  .conrad-pro-link { display: none; }                /* hide PRO inline link */
+  .header-right { gap: 14px; margin-left: auto; }
+  .header-right .header-action:first-of-type,        /* Hilfe & Support */
+  .header-right .header-action:last-of-type {        /* User name block */
+    font-size: 0;                                    /* hide labels */
+    gap: 0;
+  }
+  .header-right .header-action:last-of-type .user-name { display: none; }
+  .header-right .header-action svg { width: 22px; height: 22px; }
+
+  /* --- Search card ------------------------------------------ */
+  .search-card { height: 48px; padding: 0 6px 0 12px; gap: 8px; }
+  .search-card .search-input { font-size: 14px; }
+  .search-input::placeholder { font-size: 13px; }
+  .search-btn { padding: 0 12px; font-size: 0; }
+  .search-btn::before { content: ""; }              /* keep button alive */
+  .search-btn svg { width: 16px; height: 16px; }
+
+  /* --- Breadcrumb ------------------------------------------- */
+  .breadcrumb {
+    padding: 12px 16px 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    font-size: 12px;
+  }
+  .breadcrumb a, .breadcrumb-current { white-space: nowrap; }
+
+  /* --- PDP layout ------------------------------------------- */
+  .pdp { padding: 12px 16px; gap: 16px; }
+  .product-main { padding: 16px; gap: 16px; }
+  .product-main { grid-template-columns: 1fr; }
+  .main-image { width: 100%; max-width: 100%; height: auto; aspect-ratio: 1 / 1; padding: 16px; }
+  .main-image.is-polzahl10 { padding: 40px; }
+  .info-col { gap: 12px; }
+
+  /* --- Buy box --------------------------------------------- */
+  .buy-box { padding: 16px; }
+
+  /* --- Pack pills: 2-up ------------------------------------ */
+  .pack-row { grid-template-columns: repeat(2, 1fr); }
+
+  /* --- Bundle cards ---------------------------------------- */
+  /* Bundle cards already collapse to 100% at 600 px; here we just
+     tighten the section heading margin a touch on mobile. */
+  #section-zusammen > h2 { font-size: 17px; }
+
+  /* --- Tab content padding --------------------------------- */
+  .tab-content-body { padding: 14px 16px 16px; }
+  .tabs-wrap { padding: 8px 16px 0; }
+
+  /* --- Reserve space for the sticky buy bar ---------------- */
+  body.has-mobile-buy-bar { padding-bottom: 76px; }
+}
+
+/* ============================================================
+   SMALL MOBILE  (≤ 480 px) — polzahl 2x2 grid for fatter tap targets
+   ============================================================ */
+@media (max-width: 480px) {
+  .tile-row:has(.vtile:nth-child(4)) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .tile-row:has(.vtile:nth-child(4)) .vtile { flex: 0 1 auto; }
+}
+
+/* ============================================================
+   STICKY BOTTOM BUY BAR  (mobile-only; toggled in JS)
+   ============================================================ */
+.mobile-buy-bar { display: none; }
+@media (max-width: 767px) {
+  .mobile-buy-bar.is-visible {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--c-bg-white);
+    border-top: 1px solid var(--c-border);
+    padding: 10px 16px;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 -6px 18px rgba(15, 23, 42, 0.12);
+  }
+  .mobile-buy-bar-price {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: left;
+    color: var(--c-text);
+  }
+  .mobile-buy-bar-amount { font-size: 17px; font-weight: 700; }
+  .mobile-buy-bar-unit   { font-size: 11px; color: var(--c-text-tertiary); margin-top: 2px; }
+  .mobile-buy-bar-cta {
+    flex: 1;
+    background: var(--c-blue);
+    color: var(--c-text-on-dark);
+    border: none;
+    height: 44px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+  .mobile-buy-bar-cta:disabled { background: #d6d8de; color: #6e7588; cursor: not-allowed; }
+  .mobile-buy-bar-cta svg { width: 18px; height: 18px; }
 }
 
 .main-image {
@@ -1832,6 +1971,24 @@ button { font: inherit; cursor: pointer; }
 }
 .recht-flag-link:hover { text-decoration: underline; }
 
+/* Compare block: stack tabs above the panel on tablet/mobile. */
+@media (max-width: 700px) {
+  .serie-block .compare-wrap {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .serie-block .compare-tabs {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 6px;
+    margin-bottom: 4px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .serie-block .compare-tab { flex: 0 0 auto; min-width: 110px; }
+  .compare-specs { grid-template-columns: repeat(2, 1fr); }
+}
+
 /* FAQ accordion */
 /* "Wird oft zusammen gekauft" - standalone product cards */
 .bundle-subnote {
@@ -2512,6 +2669,18 @@ button { font: inherit; cursor: pointer; }
 </div>
 
 </main>
+
+<!-- Mobile sticky buy bar (toggled in JS at ≤ 767 px) -->
+<aside class="mobile-buy-bar" data-mobile-buy-bar aria-hidden="true">
+  <button type="button" class="mobile-buy-bar-price" data-mbb-price aria-label="Zum Preis scrollen">
+    <span class="mobile-buy-bar-amount" data-mbb-amount>—</span>
+    <span class="mobile-buy-bar-unit" data-mbb-unit></span>
+  </button>
+  <button type="button" class="mobile-buy-bar-cta" data-mbb-cta>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+    In den Einkaufswagen
+  </button>
+</aside>
 
 <footer class="footer">
   Conrad Electronic SE · Klaus-Conrad-Straße 1 · 92240 Hirschau · © 2026
@@ -4162,6 +4331,70 @@ function renderBundle() {
     });
   }
 }
+
+// === Mobile sticky bottom buy bar ===
+(function () {
+  const bar = document.querySelector('[data-mobile-buy-bar]');
+  if (!bar) return;
+  const amountEl = bar.querySelector('[data-mbb-amount]');
+  const unitEl   = bar.querySelector('[data-mbb-unit]');
+  const priceBtn = bar.querySelector('[data-mbb-price]');
+  const ctaBtn   = bar.querySelector('[data-mbb-cta]');
+  const buyBoxCta = document.querySelector('[data-cart-cta]');
+  const buyBox    = document.querySelector('.buy-box');
+  if (!buyBoxCta || !buyBox) return;
+
+  // Sync price + sold-out state from the live buy-box every frame
+  // we tick the bar. (Cheap; runs on render() + on cta-disabled changes.)
+  function syncPrice() {
+    const priceEl = document.querySelector('[data-price]');
+    const ueEl    = document.querySelector('[data-unit]');
+    if (priceEl) amountEl.textContent = priceEl.textContent.trim();
+    if (ueEl)    unitEl.textContent   = ueEl.textContent.trim();
+    const disabled = buyBoxCta.classList.contains('is-disabled');
+    ctaBtn.disabled = disabled;
+    ctaBtn.textContent = disabled ? 'Ausverkauft' : '';
+    if (!disabled) {
+      ctaBtn.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+        + '<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>'
+        + '<path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>'
+        + 'In den Einkaufswagen';
+    }
+  }
+  syncPrice();
+  // Cheap polling on click/scroll/resize covers all the cases where
+  // the buy box updates (variant, pack, qty). The buy-box price
+  // updates synchronously in render(); the next frame's polling
+  // catches it.
+  ['click', 'input'].forEach(ev =>
+    document.addEventListener(ev, () => requestAnimationFrame(syncPrice), true));
+
+  // Visibility: bar appears on mobile only, and only when the buy-
+  // box CTA is no longer in the viewport.
+  function setVisible(v) {
+    bar.classList.toggle('is-visible', v);
+    bar.setAttribute('aria-hidden', v ? 'false' : 'true');
+    document.body.classList.toggle('has-mobile-buy-bar', v);
+  }
+  const mq = window.matchMedia('(max-width: 767px)');
+  let ctaInView = true;
+  const io = new IntersectionObserver(entries => {
+    ctaInView = entries[0].isIntersecting;
+    setVisible(mq.matches && !ctaInView);
+  }, { rootMargin: '0px 0px -20px 0px' });
+  io.observe(buyBoxCta);
+  mq.addEventListener('change', () => setVisible(mq.matches && !ctaInView));
+
+  // Tap actions
+  priceBtn.addEventListener('click', () => {
+    buyBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  ctaBtn.addEventListener('click', () => {
+    if (ctaBtn.disabled) return;
+    buyBoxCta.click();  // reuse the full buy-box flow (label + addToCart)
+  });
+})();
 
 render();
 </script>
