@@ -364,6 +364,36 @@ button { font: inherit; cursor: pointer; }
     0 1px 2px 0 rgba(17, 18, 19, 0.08);
 }
 
+@media (max-width: 1366px) {
+  /* Laptop / notebook fit: shrink image column + compact tiles so
+     the 4 polzahl tiles always sit on one row in the info column. */
+  .product-main {
+    grid-template-columns: minmax(0, 360px) minmax(360px, 1fr);
+    gap: 24px;
+    padding: 20px;
+  }
+  .main-image {
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    padding: 16px;
+  }
+  .main-image.is-polzahl10 { padding: 60px; }
+  .tile-row { gap: 6px; }
+  /* Only flex-equalise rows with 4 tiles (polzahl); leave the 2-tile
+     stil/hebel rows at their natural widths so they don't stretch. */
+  .tile-row:has(.vtile:nth-child(4)) .vtile { flex: 1 1 0; }
+  .vtile { padding: 8px 6px; min-width: 60px; }
+  .vtile.selected { padding: 7px 5px; }
+  .vtile-value { font-size: 14px; }
+  .vtile-price { font-size: 12px; }
+  .vtile-unit { font-size: 10px; }
+  /* Compact the "Zuletzt gekauft" pill so it doesn't push the
+     tile past its share of the row. */
+  .vtile-history { font-size: 9px; padding: 1px 5px; margin-top: 4px; gap: 3px; line-height: 1.25; white-space: normal; }
+  .vtile-history svg { width: 9px; height: 9px; }
+}
 @media (max-width: 900px) {
   .product-main {
     grid-template-columns: 1fr;
